@@ -1,0 +1,83 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.alirezaafkar.phuzei">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+    <application
+        android:name=".App"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:name=".presentation.splash.SplashActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Splash">
+
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.alirezaafkar.phuzei.presentation.main.LoginActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+
+                <data android:scheme="com.alirezaafkar.phuzei"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".presentation.album.AlbumActivity"
+            android:screenOrientation="portrait"/>
+
+        <service
+            android:name=".presentation.muzei.PhotosArtSource"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            tools:ignore="ExportedService">
+            <intent-filter>
+                <action android:name="com.google.android.apps.muzei.api.MuzeiArtSource"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="color"
+                android:value="@color/colorPrimary"/>
+            <meta-data
+                android:name="replacement"
+                android:value="photosAuthority"/>
+            <meta-data
+                android:name="settingsActivity"
+                android:value="com.alirezaafkar.phuzei.presentation.splash.SplashActivity"/>
+        </service>
+
+        <provider
+            android:name=".presentation.muzei.PhotosArtProvider"
+            android:authorities="photosAuthority"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:permission="com.google.android.apps.muzei.api.ACCESS_PROVIDER">
+            <intent-filter>
+                <action android:name="com.google.android.apps.muzei.api.MuzeiArtProvider"/>
+            </intent-filter>
+            <meta-data
+                android:name="settingsActivity"
+                android:value="com.alirezaafkar.phuzei.presentation.splash.SplashActivity"/>
+        </provider>
+    </application>
+</manifest>
