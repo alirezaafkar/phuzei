@@ -10,6 +10,7 @@ import com.alirezaafkar.phuzei.presentation.muzei.PhotosArtProvider
 import com.alirezaafkar.phuzei.presentation.muzei.PhotosArtSource
 import com.alirezaafkar.phuzei.presentation.muzei.PhotosWorker
 import com.alirezaafkar.phuzei.presentation.splash.SplashActivity
+import com.alirezaafkar.phuzei.util.TokenAuthenticator
 import dagger.Component
 import javax.inject.Singleton
 
@@ -26,4 +27,5 @@ interface MainComponent {
     fun inject(splashActivity: SplashActivity)
     fun inject(photosArtSource: PhotosArtSource)
     fun inject(photosArtProvider: PhotosArtProvider)
+    fun inject(tokenAuthenticator: TokenAuthenticator)
 }

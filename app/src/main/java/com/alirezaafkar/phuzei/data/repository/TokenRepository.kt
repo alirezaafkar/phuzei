@@ -23,13 +23,16 @@ class TokenRepository @Inject constructor(
         }.compose(applyNetworkSchedulers())
     }
 
-    fun refresh(): Single<Unit> {
-        return api.refresh(prefs.refreshToken).map {
-            prefs.tokenType = it.tokenType
-            prefs.accessToken = it.accessToken
-            it.refreshToken?.let { token ->
-                prefs.refreshToken = token
+    fun refresh(): String? {
+        val token = api.refresh(prefs.refreshToken).execute().body() ?: return null
+
+        with(token) {
+            prefs.tokenType = tokenType
+            prefs.accessToken = accessToken
+            refreshToken?.let {
+                prefs.refreshToken = it
             }
-        }.compose(applyNetworkSchedulers())
+        }
+        return token.accessToken
     }
 }

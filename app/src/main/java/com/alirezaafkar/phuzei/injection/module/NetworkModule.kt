@@ -8,6 +8,7 @@ import com.alirezaafkar.phuzei.data.pref.AppPreferences
 import com.alirezaafkar.phuzei.injection.qualifier.AuthorizationInterceptor
 import com.alirezaafkar.phuzei.injection.qualifier.AuthorizeUrl
 import com.alirezaafkar.phuzei.injection.qualifier.LoggingInterceptor
+import com.alirezaafkar.phuzei.util.TokenAuthenticator
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -20,7 +21,6 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
-
 
 /**
  * Created by Alireza Afkar on 16/3/2018AD.
@@ -45,12 +45,14 @@ class NetworkModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(
+        authenticator: TokenAuthenticator,
         @LoggingInterceptor loggingInterceptor: Interceptor,
         @AuthorizationInterceptor authorizationInterceptor: Interceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
+            .authenticator(authenticator)
             .addInterceptor(loggingInterceptor)
-            //.addInterceptor(authorizationInterceptor)
+            .addInterceptor(authorizationInterceptor)
             .readTimeout(15, TimeUnit.SECONDS)
             .writeTimeout(15, TimeUnit.SECONDS)
             .connectTimeout(15, TimeUnit.SECONDS)
@@ -109,6 +111,13 @@ class NetworkModule {
             .addQueryParameter(KEY_REDIRECT_URI, REDIRECT_URI)
             .build().toString()
     }
+
+    @Provides
+    @Singleton
+    fun provideTokenAuthenticator(): TokenAuthenticator {
+        return TokenAuthenticator()
+    }
+
 
     @Provides
     @Singleton
