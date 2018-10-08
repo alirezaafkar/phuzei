@@ -17,7 +17,9 @@ class TokenRepository @Inject constructor(
         return api.request(code).map {
             prefs.tokenType = it.tokenType
             prefs.accessToken = it.accessToken
-            prefs.refreshToken = it.refreshToken
+            it.refreshToken?.let { token ->
+                prefs.refreshToken = token
+            }
         }.compose(applyNetworkSchedulers())
     }
 
@@ -25,7 +27,9 @@ class TokenRepository @Inject constructor(
         return api.refresh(prefs.refreshToken).map {
             prefs.tokenType = it.tokenType
             prefs.accessToken = it.accessToken
-            prefs.refreshToken = it.refreshToken
+            it.refreshToken?.let { token ->
+                prefs.refreshToken = token
+            }
         }.compose(applyNetworkSchedulers())
     }
 }

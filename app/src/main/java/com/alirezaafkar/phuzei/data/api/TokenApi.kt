@@ -1,8 +1,9 @@
 package com.alirezaafkar.phuzei.data.api
 
 import com.alirezaafkar.phuzei.CLIENT_ID
-import com.alirezaafkar.phuzei.GRANT_TYPE
+import com.alirezaafkar.phuzei.CODE_GRANT_TYPE
 import com.alirezaafkar.phuzei.REDIRECT_URI
+import com.alirezaafkar.phuzei.REFRESH_GRANT_TYPE
 import com.alirezaafkar.phuzei.data.model.Token
 import io.reactivex.Single
 import retrofit2.http.Field
@@ -20,7 +21,7 @@ interface TokenApi {
         @Field("code") code: String,
         @Field("client_id") client_id: String = CLIENT_ID,
         @Field("redirect_uri") redirect_uri: String = REDIRECT_URI,
-        @Field("grant_type") grant_type: String = GRANT_TYPE
+        @Field("grant_type") grant_type: String = CODE_GRANT_TYPE
     ): Single<Token>
 
     @FormUrlEncoded
@@ -28,6 +29,6 @@ interface TokenApi {
     fun refresh(
         @Field("refresh_token") refresh_token: String?,
         @Field("client_id") client_id: String = CLIENT_ID,
-        @Field("grant_type") grant_type: String = GRANT_TYPE
+        @Field("grant_type") grant_type: String = REFRESH_GRANT_TYPE
     ): Single<Token>
 }
