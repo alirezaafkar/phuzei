@@ -8,7 +8,6 @@ import com.alirezaafkar.phuzei.data.pref.AppPreferences
 import com.alirezaafkar.phuzei.injection.qualifier.AuthorizationInterceptor
 import com.alirezaafkar.phuzei.injection.qualifier.AuthorizeUrl
 import com.alirezaafkar.phuzei.injection.qualifier.LoggingInterceptor
-import com.alirezaafkar.phuzei.util.TokenAuthenticator
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -46,12 +45,10 @@ class NetworkModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(
-        authenticator: TokenAuthenticator,
         @LoggingInterceptor loggingInterceptor: Interceptor,
         @AuthorizationInterceptor authorizationInterceptor: Interceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
-            .authenticator(authenticator)
             .addInterceptor(loggingInterceptor)
             .addInterceptor(authorizationInterceptor)
             .readTimeout(15, TimeUnit.SECONDS)
@@ -97,12 +94,6 @@ class NetworkModule {
                 .build()
             return@Interceptor it.proceed(request)
         }
-    }
-
-    @Provides
-    @Singleton
-    fun provideTokenAuthenticator(prefs: AppPreferences): TokenAuthenticator {
-        return TokenAuthenticator(prefs)
     }
 
     @Provides

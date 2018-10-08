@@ -5,7 +5,6 @@ import com.alirezaafkar.phuzei.GRANT_TYPE
 import com.alirezaafkar.phuzei.REDIRECT_URI
 import com.alirezaafkar.phuzei.data.model.Token
 import io.reactivex.Single
-import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
@@ -27,8 +26,8 @@ interface TokenApi {
     @FormUrlEncoded
     @POST("https://www.googleapis.com/oauth2/v4/token")
     fun refresh(
-        @Field("refresh_token") refresh_token: String,
+        @Field("refresh_token") refresh_token: String?,
         @Field("client_id") client_id: String = CLIENT_ID,
         @Field("grant_type") grant_type: String = GRANT_TYPE
-    ): Call<Token>
+    ): Single<Token>
 }

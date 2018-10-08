@@ -2,10 +2,10 @@ package com.alirezaafkar.phuzei.presentation.album
 
 import com.alirezaafkar.phuzei.data.pref.AppPreferences
 import com.alirezaafkar.phuzei.data.repository.AlbumsRepository
-import com.alirezaafkar.phuzei.presentation.muzei.PhotosArtProvider
+import com.alirezaafkar.phuzei.data.repository.TokenRepository
 import com.alirezaafkar.phuzei.presentation.muzei.PhotosWorker
-import com.google.android.apps.muzei.api.provider.MuzeiArtProvider
 import io.reactivex.disposables.CompositeDisposable
+import retrofit2.HttpException
 import javax.inject.Inject
 
 /**
@@ -16,11 +16,9 @@ class AlbumPresenter(override val view: AlbumContract.View) : AlbumContract.Pres
 
     private var pageToken: String? = null
 
-    @Inject
-    lateinit var repository: AlbumsRepository
-
-    @Inject
-    lateinit var prefs: AppPreferences
+    @Inject lateinit var tokenRepository: TokenRepository
+    @Inject lateinit var repository: AlbumsRepository
+    @Inject lateinit var prefs: AppPreferences
 
     override fun onCreate() {
         super.onCreate()
@@ -46,6 +44,29 @@ class AlbumPresenter(override val view: AlbumContract.View) : AlbumContract.Pres
                         view.onAlbums(it.albums)
                     },
                     {
+                        onAlbumsError(it)
+                    }
+                )
+        )
+    }
+
+    private fun onAlbumsError(throwable: Throwable) {
+        if (throwable is HttpException && throwable.code() == 401) {
+            refreshToken()
+        } else {
+            view.onError(throwable.localizedMessage)
+        }
+    }
+
+    private fun refreshToken() {
+        disposables?.add(
+            tokenRepository.refresh()
+                .doOnSubscribe { view.showLoading() }
+                .doAfterTerminate { view.hideLoading() }
+                .subscribe(
+                    {
+                        getAlbums()
+                    }, {
                         view.onError(it.localizedMessage)
                     }
                 )
@@ -53,7 +74,9 @@ class AlbumPresenter(override val view: AlbumContract.View) : AlbumContract.Pres
     }
 
     override fun loadMore() {
-        getAlbums()
+        if (!pageToken.isNullOrBlank()) {
+            getAlbums()
+        }
     }
 
     override fun refresh() {

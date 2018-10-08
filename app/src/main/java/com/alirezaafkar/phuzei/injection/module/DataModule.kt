@@ -31,8 +31,8 @@ class DataModule {
 
     @Provides
     @Singleton
-    fun provideAlbumsRepository(api: AlbumsApi): AlbumsRepository {
-        return AlbumsRepository(api)
+    fun provideAlbumsRepository(api: AlbumsApi, prefs: AppPreferences): AlbumsRepository {
+        return AlbumsRepository(api, prefs)
     }
 
     @Provides
