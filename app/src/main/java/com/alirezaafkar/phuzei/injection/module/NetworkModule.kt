@@ -114,8 +114,8 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideTokenAuthenticator(): TokenAuthenticator {
-        return TokenAuthenticator()
+    fun provideTokenAuthenticator(prefs: AppPreferences): TokenAuthenticator {
+        return TokenAuthenticator(prefs)
     }
 
 

@@ -14,6 +14,7 @@ const val REDIRECT_URI = "$BASE_REDIRECT_URI:/oauth"
 const val BASE_API_URL = "https://photoslibrary.googleapis.com/v1/"
 const val API_SCOPE = "https://www.googleapis.com/auth/photoslibrary.readonly"
 const val CLIENT_ID = "235754202537-64dmgcv8lt7fkki91567ktooo2dbhin0.apps.googleusercontent.com"
+const val REFRESH_URL = "https://www.googleapis.com/oauth2/v4/token"
 
 const val AUTHORIZATION = "Authorization"
 
