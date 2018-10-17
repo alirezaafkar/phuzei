@@ -9,6 +9,7 @@ import com.alirezaafkar.phuzei.injection.qualifier.AuthorizationInterceptor
 import com.alirezaafkar.phuzei.injection.qualifier.AuthorizeUrl
 import com.alirezaafkar.phuzei.injection.qualifier.LoggingInterceptor
 import com.alirezaafkar.phuzei.util.TokenAuthenticator
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -67,10 +68,15 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideGsonFactory(): GsonConverterFactory {
-        val gson = GsonBuilder()
+    fun provideGson(): Gson {
+        return GsonBuilder()
             .setDateFormat("yyyy-MM-dd HH:mm:ss")
             .create()
+    }
+
+    @Provides
+    @Singleton
+    fun provideGsonFactory(gson: Gson): GsonConverterFactory {
         return GsonConverterFactory.create(gson)
     }
 
@@ -114,10 +120,9 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideTokenAuthenticator(prefs: AppPreferences): TokenAuthenticator {
-        return TokenAuthenticator(prefs)
+    fun provideTokenAuthenticator(gson: Gson, prefs: AppPreferences): TokenAuthenticator {
+        return TokenAuthenticator(gson, prefs)
     }
-
 
     @Provides
     @Singleton
