@@ -7,7 +7,6 @@ import android.os.Bundle
 import androidx.core.net.toUri
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import androidx.core.widget.toast
 import com.alirezaafkar.phuzei.*
 import com.alirezaafkar.phuzei.presentation.base.MvpActivity
 import kotlinx.android.synthetic.main.activity_login.*

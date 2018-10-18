@@ -3,7 +3,6 @@ package com.alirezaafkar.phuzei.presentation.album
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.widget.toast
 import com.alirezaafkar.phuzei.R
 import com.alirezaafkar.phuzei.data.model.Album
 import com.alirezaafkar.phuzei.presentation.base.MvpActivity

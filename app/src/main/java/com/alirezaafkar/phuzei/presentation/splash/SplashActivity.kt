@@ -1,7 +1,7 @@
 package com.alirezaafkar.phuzei.presentation.splash
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.alirezaafkar.phuzei.App
 import com.alirezaafkar.phuzei.data.pref.AppPreferences
 import com.alirezaafkar.phuzei.presentation.album.AlbumActivity

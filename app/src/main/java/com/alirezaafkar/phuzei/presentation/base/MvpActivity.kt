@@ -2,10 +2,11 @@ package com.alirezaafkar.phuzei.presentation.base
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.annotation.LayoutRes
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
+import androidx.annotation.LayoutRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import com.alirezaafkar.phuzei.App
 import com.alirezaafkar.phuzei.R
@@ -54,5 +55,9 @@ abstract class MvpActivity<out P : BasePresenter<*>> : AppCompatActivity(), Base
         }.also {
             startActivity(it)
         }
+    }
+
+    fun toast(text: String) {
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
     }
 }

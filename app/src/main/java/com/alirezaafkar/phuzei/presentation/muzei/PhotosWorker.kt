@@ -3,26 +3,27 @@ package com.alirezaafkar.phuzei.presentation.muzei
 import android.content.Context
 import androidx.core.net.toUri
 import androidx.work.*
-import androidx.work.impl.Extras
 import com.alirezaafkar.phuzei.App
 import com.alirezaafkar.phuzei.data.model.Photo
 import com.alirezaafkar.phuzei.data.pref.AppPreferences
 import com.alirezaafkar.phuzei.data.repository.PhotosRepository
 import com.google.android.apps.muzei.api.provider.Artwork
 import com.google.android.apps.muzei.api.provider.ProviderContract
-import java.util.*
 import javax.inject.Inject
 
 /**
  * Created by Alireza Afkar on 16/9/2018AD.
  */
-class PhotosWorker : Worker() {
+class PhotosWorker(
+    context: Context,
+    workerParams: WorkerParameters
+) : Worker(context, workerParams) {
+
     @Inject lateinit var repository: PhotosRepository
     @Inject lateinit var prefs: AppPreferences
 
-    override fun internalInit(appContext: Context, id: UUID, extras: Extras) {
-        super.internalInit(appContext, id, extras)
-        App.get(appContext).component?.inject(this)
+    init {
+        App.get(context).component?.inject(this)
     }
 
     override fun doWork(): Result {
