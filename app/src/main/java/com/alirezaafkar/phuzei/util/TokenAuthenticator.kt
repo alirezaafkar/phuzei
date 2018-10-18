@@ -2,7 +2,7 @@ package com.alirezaafkar.phuzei.util
 
 import com.alirezaafkar.phuzei.AUTHORIZATION
 import com.alirezaafkar.phuzei.REFRESH_URL
-import com.alirezaafkar.phuzei.contentType
+import com.alirezaafkar.phuzei.REQUEST_CONTENT_TYPE
 import com.alirezaafkar.phuzei.data.model.Token
 import com.alirezaafkar.phuzei.data.model.TokenRequest
 import com.alirezaafkar.phuzei.data.pref.AppPreferences
@@ -16,6 +16,7 @@ import javax.inject.Inject
  */
 class TokenAuthenticator @Inject constructor(
     private val gson: Gson,
+    private val client: OkHttpClient,
     private val prefs: AppPreferences
 ) : Authenticator {
 
@@ -30,21 +31,25 @@ class TokenAuthenticator @Inject constructor(
     private fun refreshToken(): String? {
         val token = prefs.refreshToken ?: return null
 
-        val body = gson.toJson(TokenRequest(token))
+        val body = RequestBody.create(
+            MediaType.parse(REQUEST_CONTENT_TYPE),
+            gson.toJson(TokenRequest(token))
+        ) ?: return null
+
         val request = Request.Builder()
             .url(REFRESH_URL)
-            .post(RequestBody.create(contentType, body))
+            .post(body)
             .build()
 
-        val response = OkHttpClient().newCall(request).execute()
+        val response = client.newCall(request).execute()
         val responseBody = response?.body()?.string() ?: return null
         val tokenResponse = gson.fromJson(responseBody, Token::class.java) ?: return null
 
-        with(tokenResponse) {
-            prefs.tokenType = tokenType
-            prefs.accessToken = accessToken
-            prefs.refreshToken = refreshToken
+        prefs.accessToken = tokenResponse.accessToken
+        tokenResponse.refreshToken?.let {
+            prefs.refreshToken = it
         }
         return tokenResponse.accessToken
     }
+
 }

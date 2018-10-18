@@ -1,7 +1,5 @@
 package com.alirezaafkar.phuzei
 
-import okhttp3.MediaType
-
 /**
  * Created by Alireza Afkar on 15/9/2018AD.
  */
@@ -19,7 +17,7 @@ const val CLIENT_ID = "235754202537-64dmgcv8lt7fkki91567ktooo2dbhin0.apps.google
 const val REFRESH_URL = "https://www.googleapis.com/oauth2/v4/token"
 
 const val AUTHORIZATION = "Authorization"
-val contentType = MediaType.parse("application/json; charset=utf-8")
+const val REQUEST_CONTENT_TYPE = "application/json; charset=utf-8"
 
 const val KEY_SCOPE = "scope"
 const val KEY_CLIENT_ID = "client_id"

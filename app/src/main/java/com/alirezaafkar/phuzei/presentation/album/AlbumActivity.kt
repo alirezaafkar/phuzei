@@ -21,9 +21,9 @@ class AlbumActivity : MvpActivity<AlbumContract.Presenter>(), AlbumContract.View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setSupportActionBar(toolbar)
         setupRecycler()
         swipe.setOnRefreshListener { refresh() }
-        presenter.getAlbums()
     }
 
     private fun setupRecycler() {
@@ -52,7 +52,7 @@ class AlbumActivity : MvpActivity<AlbumContract.Presenter>(), AlbumContract.View
     }
 
     override fun onError(error: String) {
-        toast(error).show()
+        toast(error)
     }
 
     companion object {

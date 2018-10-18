@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Phuzei</string>
     <string name="sign_in">Sign in</string>
-    <string name="errode_code">Error!</string>
+    <string name="contact">Contact</string>
+    <string name="error_code">Error!</string>
     <string name="items_count">%s items</string>
 </resources>

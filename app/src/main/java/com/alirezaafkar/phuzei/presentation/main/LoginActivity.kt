@@ -4,13 +4,13 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.core.widget.toast
 import com.alirezaafkar.phuzei.*
 import com.alirezaafkar.phuzei.presentation.base.MvpActivity
 import kotlinx.android.synthetic.main.activity_login.*
-import okhttp3.HttpUrl
 
 
 /**
@@ -20,13 +20,10 @@ class LoginActivity : MvpActivity<LoginContract.Presenter>(), LoginContract.View
     override val presenter: LoginContract.Presenter = LoginPresenter(this)
     override fun getLayout() = R.layout.activity_login
 
-    /*@Inject
-    @AuthorizeUrl
-    lateinit var authorizeUrl: HttpUrl*/
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mainComponent().inject(this)
+
+        setSupportActionBar(toolbar)
         signIn.setOnClickListener { presenter.signIn() }
     }
 
@@ -38,19 +35,8 @@ class LoginActivity : MvpActivity<LoginContract.Presenter>(), LoginContract.View
         }
     }
 
-    override fun openBrowser() {
-        val authorizeUrl = HttpUrl.Builder()
-            .scheme(SCHEME)
-            .host(BASE_URL)
-            .addPathSegments("o/oauth2/v2/auth")
-            .addQueryParameter(KEY_SCOPE, API_SCOPE)
-            .addQueryParameter(KEY_RESPONSE_TYPE, CODE)
-            .addQueryParameter(KEY_CLIENT_ID, CLIENT_ID)
-            .addQueryParameter(KEY_REDIRECT_URI, REDIRECT_URI)
-            .build()
-
-        val intent = Intent(Intent.ACTION_VIEW).apply {
-            data = Uri.parse(authorizeUrl.toString())
+    override fun openBrowser(url: String) {
+        val intent = Intent(Intent.ACTION_VIEW, url.toUri()).apply {
             flags = Intent.FLAG_ACTIVITY_NO_HISTORY or Intent.FLAG_ACTIVITY_NEW_TASK
         }
         startActivity(intent)
@@ -63,7 +49,7 @@ class LoginActivity : MvpActivity<LoginContract.Presenter>(), LoginContract.View
         val error = data.getQueryParameter(ERROR_CODE)
 
         if (error?.isNotEmpty() == true) {
-            onError(getString(R.string.errode_code))
+            onError(getString(R.string.error_code))
             finish()
         } else if (code?.isNotEmpty() == true) {
             presenter.getToken(code)
@@ -84,7 +70,7 @@ class LoginActivity : MvpActivity<LoginContract.Presenter>(), LoginContract.View
     }
 
     override fun onError(error: String) {
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+        toast(error)
     }
 
     companion object {

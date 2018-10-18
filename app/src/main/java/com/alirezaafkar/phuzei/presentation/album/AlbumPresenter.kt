@@ -2,7 +2,6 @@ package com.alirezaafkar.phuzei.presentation.album
 
 import com.alirezaafkar.phuzei.data.pref.AppPreferences
 import com.alirezaafkar.phuzei.data.repository.AlbumsRepository
-import com.alirezaafkar.phuzei.data.repository.TokenRepository
 import com.alirezaafkar.phuzei.presentation.muzei.PhotosWorker
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
@@ -15,13 +14,13 @@ class AlbumPresenter(override val view: AlbumContract.View) : AlbumContract.Pres
 
     private var pageToken: String? = null
 
-    @Inject lateinit var tokenRepository: TokenRepository
-    @Inject lateinit var repository: AlbumsRepository
     @Inject lateinit var prefs: AppPreferences
+    @Inject lateinit var repository: AlbumsRepository
 
     override fun onCreate() {
         super.onCreate()
         view.mainComponent().inject(this)
+        getAlbums()
     }
 
     override fun selectAlbum(albumId: String) {
@@ -58,6 +57,5 @@ class AlbumPresenter(override val view: AlbumContract.View) : AlbumContract.Pres
     override fun refresh() {
         pageToken = null
         getAlbums()
-
     }
 }

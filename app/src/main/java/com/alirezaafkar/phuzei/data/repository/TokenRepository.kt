@@ -22,17 +22,4 @@ class TokenRepository @Inject constructor(
             }
         }.compose(applyNetworkSchedulers())
     }
-
-    fun refresh(): String? {
-        val token = api.refresh(prefs.refreshToken).execute().body() ?: return null
-
-        with(token) {
-            prefs.tokenType = tokenType
-            prefs.accessToken = accessToken
-            refreshToken?.let {
-                prefs.refreshToken = it
-            }
-        }
-        return token.accessToken
-    }
 }

@@ -6,7 +6,6 @@ import com.alirezaafkar.phuzei.data.api.PhotosApi
 import com.alirezaafkar.phuzei.data.api.TokenApi
 import com.alirezaafkar.phuzei.data.pref.AppPreferences
 import com.alirezaafkar.phuzei.injection.qualifier.AuthorizationInterceptor
-import com.alirezaafkar.phuzei.injection.qualifier.AuthorizeUrl
 import com.alirezaafkar.phuzei.injection.qualifier.LoggingInterceptor
 import com.alirezaafkar.phuzei.util.TokenAuthenticator
 import com.google.gson.Gson
@@ -31,10 +30,14 @@ class NetworkModule {
     @Provides
     @Singleton
     fun provideRetrofit(
-        client: OkHttpClient,
+        okHttpClient: OkHttpClient,
         gsonFactory: GsonConverterFactory,
+        authenticator: TokenAuthenticator,
         rxJavaFactory: RxJava2CallAdapterFactory
     ): Retrofit {
+        val client = okHttpClient.newBuilder()
+            .authenticator(authenticator).build()
+
         return Retrofit.Builder()
             .baseUrl(BASE_API_URL)
             .client(client)
@@ -46,12 +49,10 @@ class NetworkModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(
-        authenticator: TokenAuthenticator,
         @LoggingInterceptor loggingInterceptor: Interceptor,
         @AuthorizationInterceptor authorizationInterceptor: Interceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
-            .authenticator(authenticator)
             .addInterceptor(loggingInterceptor)
             .addInterceptor(authorizationInterceptor)
             .readTimeout(15, TimeUnit.SECONDS)
@@ -105,8 +106,7 @@ class NetworkModule {
     }
 
     @Provides
-    @AuthorizeUrl
-    fun provideAuthUrl(): String {
+    fun provideAuthUrl(): HttpUrl {
         return HttpUrl.Builder()
             .scheme(SCHEME)
             .host(BASE_URL)
@@ -115,13 +115,16 @@ class NetworkModule {
             .addQueryParameter(KEY_RESPONSE_TYPE, CODE)
             .addQueryParameter(KEY_CLIENT_ID, CLIENT_ID)
             .addQueryParameter(KEY_REDIRECT_URI, REDIRECT_URI)
-            .build().toString()
+            .build()
     }
 
     @Provides
-    @Singleton
-    fun provideTokenAuthenticator(gson: Gson, prefs: AppPreferences): TokenAuthenticator {
-        return TokenAuthenticator(gson, prefs)
+    fun provideTokenAuthenticator(
+        gson: Gson,
+        client: OkHttpClient,
+        prefs: AppPreferences
+    ): TokenAuthenticator {
+        return TokenAuthenticator(gson, client, prefs)
     }
 
     @Provides

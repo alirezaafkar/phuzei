@@ -1,5 +1,6 @@
 package com.alirezaafkar.phuzei.presentation.muzei
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.core.net.toUri
 import com.alirezaafkar.phuzei.App
@@ -16,17 +17,15 @@ import javax.inject.Inject
  * Created by Alireza Afkar on 16/9/2018AD.
  */
 class PhotosArtSource : RemoteMuzeiArtSource(SOURCE_NAME) {
-    @Inject
-    lateinit var repository: PhotosRepository
-
-    @Inject
-    lateinit var prefs: AppPreferences
+    @Inject lateinit var repository: PhotosRepository
+    @Inject lateinit var prefs: AppPreferences
 
     override fun onCreate() {
         super.onCreate()
         App.get(this).component?.inject(this)
     }
 
+    @SuppressLint("CheckResult")
     override fun onTryUpdate(reason: Int) {
         repository.getAlbumPhotos(prefs.album ?: return)
             .subscribe(

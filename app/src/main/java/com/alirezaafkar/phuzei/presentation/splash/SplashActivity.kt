@@ -12,8 +12,7 @@ import javax.inject.Inject
  * Created by Alireza Afkar on 16/9/2018AD.
  */
 class SplashActivity : AppCompatActivity() {
-    @Inject
-    lateinit var prefs: AppPreferences
+    @Inject lateinit var prefs: AppPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -12,7 +12,7 @@ interface LoginContract {
         fun hideLoading()
         fun onError(error: String)
         fun onTokenResult()
-        fun openBrowser()
+        fun openBrowser(url: String)
     }
 
     interface Presenter : BasePresenter<View> {
