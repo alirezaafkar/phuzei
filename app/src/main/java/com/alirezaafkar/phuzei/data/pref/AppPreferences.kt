@@ -26,8 +26,23 @@ class AppPreferences(context: Context) {
         get() = preferences.getString(ALBUM, "")
         set(value) = preferences.edit { putString(ALBUM, value) }
 
+    var shuffle: Boolean
+        get() = preferences.getBoolean(SHUFFLE, false)
+        set(value) = preferences.edit { putBoolean(SHUFFLE, value) }
+
+    fun logout() {
+        preferences.edit {
+            putString(ALBUM, null)
+            putBoolean(SHUFFLE, false)
+            putString(TOKEN_TYPE, null)
+            putString(ACCESS_TOKEN, null)
+            putString(REFRESH_TOKEN, null)
+        }
+    }
+
     companion object {
         private const val ALBUM = "album"
+        private const val SHUFFLE = "shuffle"
         private const val TOKEN_TYPE = "token_type"
         private const val ACCESS_TOKEN = "access_token"
         private const val REFRESH_TOKEN = "refresh_token"

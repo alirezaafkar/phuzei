@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.Menu
 import androidx.core.net.toUri
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -34,11 +35,18 @@ class LoginActivity : MvpActivity<LoginContract.Presenter>(), LoginContract.View
         }
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        menu?.setGroupVisible(R.id.action_order, false)
+        menu?.findItem(R.id.action_log_out)?.isVisible = false
+        return super.onPrepareOptionsMenu(menu)
+    }
+
     override fun openBrowser(url: String) {
-        val intent = Intent(Intent.ACTION_VIEW, url.toUri()).apply {
+        Intent(Intent.ACTION_VIEW, url.toUri()).apply {
             flags = Intent.FLAG_ACTIVITY_NO_HISTORY or Intent.FLAG_ACTIVITY_NEW_TASK
+        }.also {
+            startActivity(it)
         }
-        startActivity(intent)
     }
 
     private fun checkResponse(data: Uri) {

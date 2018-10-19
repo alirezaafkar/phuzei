@@ -14,6 +14,7 @@ interface AlbumContract {
         fun onAlbums(albums: List<Album>)
         fun onError(error: String)
         fun finish()
+        fun loggedOut()
     }
 
     interface Presenter : BasePresenter<View> {
@@ -22,5 +23,8 @@ interface AlbumContract {
         fun refresh()
         fun selectAlbum(albumId: String)
         fun currentAlbum(): String?
+        fun setShuffleOrder(shuffle: Boolean)
+        fun isShuffleOrder(): Boolean
+        fun logout()
     }
 }

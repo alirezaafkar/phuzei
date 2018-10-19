@@ -25,11 +25,24 @@ class AlbumPresenter(override val view: AlbumContract.View) : AlbumContract.Pres
 
     override fun selectAlbum(albumId: String) {
         prefs.album = albumId
-        PhotosWorker.enqueueLoad()
-        view.finish()
+        loadAlbumImages()
     }
 
     override fun currentAlbum(): String? = prefs.album
+
+    override fun setShuffleOrder(shuffle: Boolean) {
+        prefs.shuffle = shuffle
+        if (!prefs.album.isNullOrBlank()) {
+            loadAlbumImages()
+        }
+    }
+
+    override fun isShuffleOrder() = prefs.shuffle
+
+    private fun loadAlbumImages() {
+        PhotosWorker.enqueueLoad()
+        view.finish()
+    }
 
     override fun getAlbums() {
         disposables?.add(
@@ -57,5 +70,10 @@ class AlbumPresenter(override val view: AlbumContract.View) : AlbumContract.Pres
     override fun refresh() {
         pageToken = null
         getAlbums()
+    }
+
+    override fun logout() {
+        prefs.logout()
+        view.loggedOut()
     }
 }

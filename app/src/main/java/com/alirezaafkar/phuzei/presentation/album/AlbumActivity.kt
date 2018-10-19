@@ -3,6 +3,9 @@ package com.alirezaafkar.phuzei.presentation.album
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import com.alirezaafkar.phuzei.App
 import com.alirezaafkar.phuzei.R
 import com.alirezaafkar.phuzei.data.model.Album
 import com.alirezaafkar.phuzei.presentation.base.MvpActivity
@@ -23,6 +26,31 @@ class AlbumActivity : MvpActivity<AlbumContract.Presenter>(), AlbumContract.View
         setSupportActionBar(toolbar)
         setupRecycler()
         swipe.setOnRefreshListener { refresh() }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        super.onOptionsItemSelected(item)
+        when {
+            item.itemId == R.id.action_sequence -> {
+                presenter.setShuffleOrder(false)
+                item.isChecked = true
+            }
+            item.itemId == R.id.action_shuffle -> {
+                presenter.setShuffleOrder(true)
+                item.isChecked = true
+            }
+            item.itemId == R.id.action_log_out -> presenter.logout()
+        }
+        return true
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        if (presenter.isShuffleOrder()) {
+            menu?.findItem(R.id.action_shuffle)?.isChecked = true
+        } else {
+            menu?.findItem(R.id.action_order)?.isChecked = true
+        }
+        return super.onPrepareOptionsMenu(menu)
     }
 
     private fun setupRecycler() {
@@ -52,6 +80,10 @@ class AlbumActivity : MvpActivity<AlbumContract.Presenter>(), AlbumContract.View
 
     override fun onError(error: String) {
         toast(error)
+    }
+
+    override fun loggedOut() {
+        App.restart(this)
     }
 
     companion object {

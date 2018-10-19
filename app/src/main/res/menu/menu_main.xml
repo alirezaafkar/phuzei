@@ -5,5 +5,25 @@
         android:id="@+id/action_info"
         android:icon="@drawable/ic_info_outline"
         android:title="@string/contact"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
+
+    <group
+        android:id="@+id/action_order"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/action_sequence"
+            android:checked="true"
+            android:title="@string/sequence"
+            app:showAsAction="never"/>
+
+        <item
+            android:id="@+id/action_shuffle"
+            android:title="@string/shuffle"
+            app:showAsAction="never"/>
+    </group>
+
+    <item
+        android:id="@+id/action_log_out"
+        android:title="@string/log_out"
+        app:showAsAction="never"/>
 </menu>

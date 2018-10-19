@@ -29,7 +29,7 @@ class PhotosWorker(
     override fun doWork(): Result {
         val album = prefs.album ?: return Result.FAILURE
         repository.getAlbumPhotosSync(album)?.let {
-            onPhotosResult(it)
+            onPhotosResult(if (prefs.shuffle) it.shuffled() else it)
             return Result.SUCCESS
         } ?: kotlin.run {
             return Result.FAILURE
