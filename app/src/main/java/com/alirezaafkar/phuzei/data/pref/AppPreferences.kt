@@ -33,3 +33,6 @@ class AppPreferences(context: Context) {
         private const val REFRESH_TOKEN = "refresh_token"
     }
 }
+
+fun AppPreferences.token(token: String? = accessToken) =
+    if (token.isNullOrBlank()) "" else "$tokenType $token"

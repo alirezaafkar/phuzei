@@ -6,6 +6,7 @@ import com.alirezaafkar.phuzei.REQUEST_CONTENT_TYPE
 import com.alirezaafkar.phuzei.data.model.Token
 import com.alirezaafkar.phuzei.data.model.TokenRequest
 import com.alirezaafkar.phuzei.data.pref.AppPreferences
+import com.alirezaafkar.phuzei.data.pref.token
 import com.google.gson.Gson
 import okhttp3.*
 import javax.inject.Inject
@@ -24,7 +25,7 @@ class TokenAuthenticator @Inject constructor(
         val accessToken = refreshToken() ?: return null
 
         return response.request().newBuilder()
-            .header(AUTHORIZATION, accessToken)
+            .header(AUTHORIZATION, prefs.token(accessToken))
             .build()
     }
 

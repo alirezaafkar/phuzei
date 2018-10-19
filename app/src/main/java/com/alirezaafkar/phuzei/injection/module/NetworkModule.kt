@@ -5,6 +5,7 @@ import com.alirezaafkar.phuzei.data.api.AlbumsApi
 import com.alirezaafkar.phuzei.data.api.PhotosApi
 import com.alirezaafkar.phuzei.data.api.TokenApi
 import com.alirezaafkar.phuzei.data.pref.AppPreferences
+import com.alirezaafkar.phuzei.data.pref.token
 import com.alirezaafkar.phuzei.injection.qualifier.AuthorizationInterceptor
 import com.alirezaafkar.phuzei.injection.qualifier.LoggingInterceptor
 import com.alirezaafkar.phuzei.util.TokenAuthenticator
@@ -91,15 +92,11 @@ class NetworkModule {
     @Provides
     @Singleton
     @AuthorizationInterceptor
-    fun provideAuthorizationInterceptor(preferences: AppPreferences): Interceptor {
-        val authorization = preferences.accessToken?.let {
-            "${preferences.tokenType} $it"
-        } ?: kotlin.run { "" }
-
+    fun provideAuthorizationInterceptor(prefs: AppPreferences): Interceptor {
         return Interceptor {
             val original = it.request()
             val request = original.newBuilder()
-                .header(AUTHORIZATION, authorization)
+                .header(AUTHORIZATION, prefs.token())
                 .build()
             return@Interceptor it.proceed(request)
         }
