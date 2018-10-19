@@ -8,5 +8,10 @@ data class Photo(
     @SerializedName("mimeType") val mimeType: String,
     @SerializedName("filename") val filename: String,
     @SerializedName("productUrl") val productUrl: String,
-    @SerializedName("description") val description: String
+    @SerializedName("description") val description: String,
+    @SerializedName("mediaMetadata") val metadata: Metadata
 )
+
+fun Photo.width() = metadata.width
+
+fun Photo.height() = metadata.height

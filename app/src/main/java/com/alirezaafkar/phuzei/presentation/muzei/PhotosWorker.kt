@@ -5,6 +5,8 @@ import androidx.core.net.toUri
 import androidx.work.*
 import com.alirezaafkar.phuzei.App
 import com.alirezaafkar.phuzei.data.model.Photo
+import com.alirezaafkar.phuzei.data.model.height
+import com.alirezaafkar.phuzei.data.model.width
 import com.alirezaafkar.phuzei.data.pref.AppPreferences
 import com.alirezaafkar.phuzei.data.repository.PhotosRepository
 import com.google.android.apps.muzei.api.provider.Artwork
@@ -44,7 +46,8 @@ class PhotosWorker(
                 title = photo.filename
                 attribution = photo.description
                 webUri = photo.productUrl.toUri()
-                persistentUri = photo.baseUrl.toUri()
+                persistentUri = "${photo.baseUrl}=w${photo.width()}-h${photo.height()}".toUri()
+
             }
         }.forEach { artwork ->
             ProviderContract.Artwork.addArtwork(
