@@ -5,6 +5,8 @@ import android.content.Intent
 import androidx.core.net.toUri
 import com.alirezaafkar.phuzei.App
 import com.alirezaafkar.phuzei.data.model.Photo
+import com.alirezaafkar.phuzei.data.model.height
+import com.alirezaafkar.phuzei.data.model.width
 import com.alirezaafkar.phuzei.data.pref.AppPreferences
 import com.alirezaafkar.phuzei.data.repository.PhotosRepository
 import com.google.android.apps.muzei.api.Artwork
@@ -65,8 +67,8 @@ class PhotosArtSource : RemoteMuzeiArtSource(SOURCE_NAME) {
                 .token(photo.id)
                 .title(photo.filename)
                 .attribution(photo.description)
-                .imageUri(photo.baseUrl.toUri())
                 .viewIntent(Intent(Intent.ACTION_VIEW, photo.productUrl.toUri()))
+                .imageUri("${photo.baseUrl}=w${photo.width()}-h${photo.height()}".toUri())
                 .build()
         )
     }
