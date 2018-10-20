@@ -31,8 +31,14 @@ class PhotosArtSource : RemoteMuzeiArtSource(SOURCE_NAME) {
     override fun onTryUpdate(reason: Int) {
         repository.getAlbumPhotos(prefs.album ?: return)
             .subscribe(
-                { onPhotosResult(it.mediaItems.filter(Media::isImage)) },
-                { Timber.e(it) }
+                {
+                    prefs.pageToken = it.nextPageToken
+                    onPhotosResult(it.mediaItems.filter(Media::isImage))
+                },
+                {
+                    prefs.pageToken = null
+                    Timber.e(it)
+                }
             )
     }
 

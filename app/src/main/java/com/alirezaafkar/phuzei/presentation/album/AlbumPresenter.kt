@@ -25,6 +25,7 @@ class AlbumPresenter(override val view: AlbumContract.View) : AlbumContract.Pres
 
     override fun selectAlbum(albumId: String) {
         prefs.album = albumId
+        prefs.pageToken = null
         loadAlbumImages()
     }
 

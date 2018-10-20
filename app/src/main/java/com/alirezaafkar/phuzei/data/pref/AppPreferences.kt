@@ -26,6 +26,10 @@ class AppPreferences(context: Context) {
         get() = preferences.getString(ALBUM, "")
         set(value) = preferences.edit { putString(ALBUM, value) }
 
+    var pageToken: String?
+        get() = preferences.getString(PAGE_TOKEN, "")
+        set(value) = preferences.edit { putString(PAGE_TOKEN, value) }
+
     var shuffle: Boolean
         get() = preferences.getBoolean(SHUFFLE, false)
         set(value) = preferences.edit { putBoolean(SHUFFLE, value) }
@@ -35,6 +39,7 @@ class AppPreferences(context: Context) {
             putString(ALBUM, null)
             putBoolean(SHUFFLE, false)
             putString(TOKEN_TYPE, null)
+            putString(PAGE_TOKEN, null)
             putString(ACCESS_TOKEN, null)
             putString(REFRESH_TOKEN, null)
         }
@@ -43,6 +48,7 @@ class AppPreferences(context: Context) {
     companion object {
         private const val ALBUM = "album"
         private const val SHUFFLE = "shuffle"
+        private const val PAGE_TOKEN = "page_token"
         private const val TOKEN_TYPE = "token_type"
         private const val ACCESS_TOKEN = "access_token"
         private const val REFRESH_TOKEN = "refresh_token"

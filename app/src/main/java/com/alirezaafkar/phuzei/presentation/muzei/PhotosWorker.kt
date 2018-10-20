@@ -30,10 +30,18 @@ class PhotosWorker(
 
     override fun doWork(): Result {
         val album = prefs.album ?: return Result.FAILURE
-        repository.getAlbumPhotosSync(album)?.let {
-            onPhotosResult(if (prefs.shuffle) it.shuffled() else it)
+        repository.getAlbumPhotosSync(album, prefs.pageToken)?.let {
+            prefs.pageToken = it.nextPageToken
+            onPhotosResult(
+                if (prefs.shuffle) {
+                    it.mediaItems.shuffled()
+                } else {
+                    it.mediaItems
+                }
+            )
             return Result.SUCCESS
         } ?: kotlin.run {
+            prefs.pageToken = null
             return Result.FAILURE
         }
     }
