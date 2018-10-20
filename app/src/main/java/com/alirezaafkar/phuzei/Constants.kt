@@ -23,3 +23,5 @@ const val KEY_SCOPE = "scope"
 const val KEY_CLIENT_ID = "client_id"
 const val KEY_REDIRECT_URI = "redirect_uri"
 const val KEY_RESPONSE_TYPE = "response_type"
+
+const val MUZEI_PACKAGE_NAME = "net.nurik.roman.muzei"

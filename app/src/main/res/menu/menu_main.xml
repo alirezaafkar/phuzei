@@ -22,8 +22,15 @@
             app:showAsAction="never"/>
     </group>
 
-    <item
-        android:id="@+id/action_log_out"
-        android:title="@string/log_out"
-        app:showAsAction="never"/>
+    <group
+        android:id="@+id/action_other">
+        <item
+            android:id="@+id/action_muzei"
+            android:title="@string/muzei"
+            app:showAsAction="never"/>
+        <item
+            android:id="@+id/action_log_out"
+            android:title="@string/log_out"
+            app:showAsAction="never"/>
+    </group>
 </menu>

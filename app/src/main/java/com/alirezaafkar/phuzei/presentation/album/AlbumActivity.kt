@@ -5,12 +5,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.core.net.toUri
 import com.alirezaafkar.phuzei.App
+import com.alirezaafkar.phuzei.MUZEI_PACKAGE_NAME
 import com.alirezaafkar.phuzei.R
 import com.alirezaafkar.phuzei.data.model.Album
 import com.alirezaafkar.phuzei.presentation.base.MvpActivity
 import com.alirezaafkar.phuzei.util.InfiniteScrollListener
 import kotlinx.android.synthetic.main.activity_album.*
+
 
 /**
  * Created by Alireza Afkar on 16/9/2018AD.
@@ -40,6 +43,7 @@ class AlbumActivity : MvpActivity<AlbumContract.Presenter>(), AlbumContract.View
                 item.isChecked = true
             }
             item.itemId == R.id.action_log_out -> presenter.logout()
+            item.itemId == R.id.action_muzei -> launchMuzei()
         }
         return true
     }
@@ -64,6 +68,17 @@ class AlbumActivity : MvpActivity<AlbumContract.Presenter>(), AlbumContract.View
     private fun refresh() {
         adapter.clearItems()
         presenter.refresh()
+    }
+
+    private fun launchMuzei() {
+        var intent = packageManager.getLaunchIntentForPackage(MUZEI_PACKAGE_NAME)
+        if (intent == null) {
+            intent = Intent(Intent.ACTION_VIEW).apply {
+                data = "market://details?id=$MUZEI_PACKAGE_NAME".toUri()
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+        }
+        startActivity(intent)
     }
 
     override fun showLoading() {
