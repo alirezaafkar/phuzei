@@ -7,23 +7,29 @@
         android:title="@string/contact"
         app:showAsAction="ifRoom"/>
 
-    <group
+    <item
         android:id="@+id/action_order"
-        android:checkableBehavior="single">
-        <item
-            android:id="@+id/action_sequence"
-            android:checked="true"
-            android:title="@string/sequence"
-            app:showAsAction="never"/>
+        android:title="@string/order">
+        <menu>
+            <group
+                android:id="@+id/action_order_group"
+                android:checkableBehavior="single">
+                <item
+                    android:id="@+id/action_sequence"
+                    android:checked="true"
+                    android:title="@string/sequence"
+                    app:showAsAction="never"/>
 
-        <item
-            android:id="@+id/action_shuffle"
-            android:title="@string/shuffle"
-            app:showAsAction="never"/>
-    </group>
+                <item
+                    android:id="@+id/action_shuffle"
+                    android:title="@string/shuffle"
+                    app:showAsAction="never"/>
+            </group>
+        </menu>
+    </item>
 
     <group
-        android:id="@+id/action_other">
+        android:id="@+id/action_other_group">
         <item
             android:id="@+id/action_muzei"
             android:title="@string/muzei"

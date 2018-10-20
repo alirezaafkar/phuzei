@@ -72,7 +72,7 @@ class PhotosArtSource : RemoteMuzeiArtSource(SOURCE_NAME) {
             Artwork.Builder()
                 .token(photo.id)
                 .title(photo.filename)
-                .attribution(photo.description)
+                .byline(photo.description)
                 .viewIntent(Intent(Intent.ACTION_VIEW, photo.productUrl.toUri()))
                 .imageUri(photo.largeUrl().toUri())
                 .build()

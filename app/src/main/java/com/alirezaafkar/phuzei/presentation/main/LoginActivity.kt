@@ -36,8 +36,8 @@ class LoginActivity : MvpActivity<LoginContract.Presenter>(), LoginContract.View
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        menu?.setGroupVisible(R.id.action_order, false)
-        menu?.setGroupVisible(R.id.action_other, false)
+        menu?.findItem(R.id.action_order)?.isVisible = false
+        menu?.setGroupVisible(R.id.action_other_group, false)
         return super.onPrepareOptionsMenu(menu)
     }
 

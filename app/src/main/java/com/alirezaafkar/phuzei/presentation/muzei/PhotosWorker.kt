@@ -55,7 +55,7 @@ class PhotosWorker(
                 Artwork().apply {
                     token = photo.id
                     title = photo.filename
-                    attribution = photo.description
+                    byline = photo.description
                     webUri = photo.productUrl.toUri()
                     persistentUri = photo.largeUrl().toUri()
 
