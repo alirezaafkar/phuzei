@@ -4,9 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.core.net.toUri
 import com.alirezaafkar.phuzei.App
-import com.alirezaafkar.phuzei.data.model.Photo
-import com.alirezaafkar.phuzei.data.model.height
-import com.alirezaafkar.phuzei.data.model.width
+import com.alirezaafkar.phuzei.data.model.Media
+import com.alirezaafkar.phuzei.data.model.isImage
+import com.alirezaafkar.phuzei.data.model.largeUrl
 import com.alirezaafkar.phuzei.data.pref.AppPreferences
 import com.alirezaafkar.phuzei.data.repository.PhotosRepository
 import com.google.android.apps.muzei.api.Artwork
@@ -31,13 +31,13 @@ class PhotosArtSource : RemoteMuzeiArtSource(SOURCE_NAME) {
     override fun onTryUpdate(reason: Int) {
         repository.getAlbumPhotos(prefs.album ?: return)
             .subscribe(
-                { onPhotosResult(it.mediaItems) },
+                { onPhotosResult(it.mediaItems.filter(Media::isImage)) },
                 { Timber.e(it) }
             )
     }
 
-    private fun onPhotosResult(photos: List<Photo>) {
-        if (photos.isEmpty()) {
+    private fun onPhotosResult(medias: List<Media>) {
+        if (medias.isEmpty()) {
             Timber.w("No photos returned from API")
             scheduleUpdate()
             return
@@ -46,29 +46,29 @@ class PhotosArtSource : RemoteMuzeiArtSource(SOURCE_NAME) {
         val currentToken = currentArtwork?.token
         val random = Random()
         var token: String
-        var photo: Photo
+        var media: Media
 
         while (true) {
-            photo = photos[random.nextInt(photos.size)]
-            token = photo.id
-            if (photos.size <= 1 || token != currentToken) {
+            media = medias[random.nextInt(medias.size)]
+            token = media.id
+            if (medias.size <= 1 || token != currentToken) {
                 break
             }
         }
 
-        publish(photo)
+        publish(media)
 
         scheduleUpdate()
     }
 
-    private fun publish(photo: Photo) {
+    private fun publish(photo: Media) {
         publishArtwork(
             Artwork.Builder()
                 .token(photo.id)
                 .title(photo.filename)
                 .attribution(photo.description)
                 .viewIntent(Intent(Intent.ACTION_VIEW, photo.productUrl.toUri()))
-                .imageUri("${photo.baseUrl}=w${photo.width()}-h${photo.height()}".toUri())
+                .imageUri(photo.largeUrl().toUri())
                 .build()
         )
     }

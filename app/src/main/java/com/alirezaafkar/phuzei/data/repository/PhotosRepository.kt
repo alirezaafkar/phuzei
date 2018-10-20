@@ -2,7 +2,7 @@ package com.alirezaafkar.phuzei.data.repository
 
 import com.alirezaafkar.phuzei.data.api.PhotosApi
 import com.alirezaafkar.phuzei.util.applyNetworkSchedulers
-import com.alirezaafkar.phuzei.data.model.Photo
+import com.alirezaafkar.phuzei.data.model.Media
 import com.alirezaafkar.phuzei.data.model.Search
 import com.alirezaafkar.phuzei.data.model.SearchResponse
 import io.reactivex.Single
@@ -17,7 +17,7 @@ class PhotosRepository @Inject constructor(private var api: PhotosApi) {
         return api.getAlbumPhotos(search).compose(applyNetworkSchedulers())
     }
 
-    fun getAlbumPhotosSync(albumId: String): List<Photo>? {
+    fun getAlbumPhotosSync(albumId: String): List<Media>? {
         val search = Search(albumId)
         return api.getAlbumPhotosCall(search).execute().body()?.mediaItems
     }

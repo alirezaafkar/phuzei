@@ -2,7 +2,7 @@ package com.alirezaafkar.phuzei.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class Photo(
+data class Media(
     @SerializedName("id") val id: String,
     @SerializedName("baseUrl") val baseUrl: String,
     @SerializedName("mimeType") val mimeType: String,
@@ -12,6 +12,6 @@ data class Photo(
     @SerializedName("mediaMetadata") val metadata: Metadata
 )
 
-fun Photo.width() = metadata.width
+fun Media.largeUrl() = "$baseUrl=w${metadata.width}-h${metadata.height}"
 
-fun Photo.height() = metadata.height
+fun Media.isImage() = mimeType.startsWith("image", true) && !mimeType.endsWith("gif", true)

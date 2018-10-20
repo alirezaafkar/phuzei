@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.core.net.toUri
 import androidx.work.*
 import com.alirezaafkar.phuzei.App
-import com.alirezaafkar.phuzei.data.model.Photo
-import com.alirezaafkar.phuzei.data.model.height
-import com.alirezaafkar.phuzei.data.model.width
+import com.alirezaafkar.phuzei.data.model.Media
+import com.alirezaafkar.phuzei.data.model.isImage
+import com.alirezaafkar.phuzei.data.model.largeUrl
 import com.alirezaafkar.phuzei.data.pref.AppPreferences
 import com.alirezaafkar.phuzei.data.repository.PhotosRepository
 import com.google.android.apps.muzei.api.provider.Artwork
@@ -38,24 +38,28 @@ class PhotosWorker(
         }
     }
 
-    private fun onPhotosResult(photos: List<Photo>) {
+    private fun onPhotosResult(medias: List<Media>) {
         deleteAllImages()
-        photos.map { photo ->
-            Artwork().apply {
-                token = photo.id
-                title = photo.filename
-                attribution = photo.description
-                webUri = photo.productUrl.toUri()
-                persistentUri = "${photo.baseUrl}=w${photo.width()}-h${photo.height()}".toUri()
+        medias
+            .asSequence()
+            .filter(Media::isImage)
+            .map { photo ->
+                Artwork().apply {
+                    token = photo.id
+                    title = photo.filename
+                    attribution = photo.description
+                    webUri = photo.productUrl.toUri()
+                    persistentUri = photo.largeUrl().toUri()
 
+                }
             }
-        }.forEach { artwork ->
-            ProviderContract.Artwork.addArtwork(
-                applicationContext,
-                PhotosArtProvider::class.java,
-                artwork
-            )
-        }
+            .toList().forEach { artwork ->
+                ProviderContract.Artwork.addArtwork(
+                    applicationContext,
+                    PhotosArtProvider::class.java,
+                    artwork
+                )
+            }
     }
 
     private fun deleteAllImages() {
