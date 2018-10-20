@@ -13,15 +13,15 @@ interface AlbumContract {
         fun hideLoading()
         fun onAlbums(albums: List<Album>)
         fun onError(error: String)
-        fun finish()
         fun loggedOut()
+        fun onAlbumSelected(title: String)
     }
 
     interface Presenter : BasePresenter<View> {
         fun getAlbums()
         fun loadMore()
         fun refresh()
-        fun selectAlbum(albumId: String)
+        fun selectAlbum(album: Album)
         fun currentAlbum(): String?
         fun setShuffleOrder(shuffle: Boolean)
         fun isShuffleOrder(): Boolean

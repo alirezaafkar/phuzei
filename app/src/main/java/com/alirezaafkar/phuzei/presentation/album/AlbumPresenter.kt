@@ -1,5 +1,6 @@
 package com.alirezaafkar.phuzei.presentation.album
 
+import com.alirezaafkar.phuzei.data.model.Album
 import com.alirezaafkar.phuzei.data.pref.AppPreferences
 import com.alirezaafkar.phuzei.data.repository.AlbumsRepository
 import com.alirezaafkar.phuzei.presentation.muzei.PhotosWorker
@@ -23,10 +24,10 @@ class AlbumPresenter(override val view: AlbumContract.View) : AlbumContract.Pres
         getAlbums()
     }
 
-    override fun selectAlbum(albumId: String) {
-        prefs.album = albumId
+    override fun selectAlbum(album: Album) {
+        prefs.album = album.id
         prefs.pageToken = null
-        loadAlbumImages()
+        loadAlbumImages(album.title)
     }
 
     override fun currentAlbum(): String? = prefs.album
@@ -34,15 +35,17 @@ class AlbumPresenter(override val view: AlbumContract.View) : AlbumContract.Pres
     override fun setShuffleOrder(shuffle: Boolean) {
         prefs.shuffle = shuffle
         if (!prefs.album.isNullOrBlank()) {
-            loadAlbumImages()
+            loadAlbumImages(null)
         }
     }
 
     override fun isShuffleOrder() = prefs.shuffle
 
-    private fun loadAlbumImages() {
+    private fun loadAlbumImages(title: String?) {
         PhotosWorker.enqueueLoad()
-        view.finish()
+        title?.let {
+            view.onAlbumSelected(it)
+        }
     }
 
     override fun getAlbums() {

@@ -12,6 +12,7 @@ import com.alirezaafkar.phuzei.R
 import com.alirezaafkar.phuzei.data.model.Album
 import com.alirezaafkar.phuzei.presentation.base.MvpActivity
 import com.alirezaafkar.phuzei.util.InfiniteScrollListener
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_album.*
 
 
@@ -58,7 +59,10 @@ class AlbumActivity : MvpActivity<AlbumContract.Presenter>(), AlbumContract.View
     }
 
     private fun setupRecycler() {
-        adapter = AlbumAdapter(presenter.currentAlbum()) { presenter.selectAlbum(it.id) }
+        adapter = AlbumAdapter(presenter.currentAlbum()) {
+            presenter.selectAlbum(it)
+            adapter.setAlbum(it.id)
+        }
         with(recyclerView) {
             adapter = this@AlbumActivity.adapter
             addOnScrollListener(InfiniteScrollListener { presenter.loadMore() })
@@ -91,6 +95,16 @@ class AlbumActivity : MvpActivity<AlbumContract.Presenter>(), AlbumContract.View
 
     override fun onAlbums(albums: List<Album>) {
         adapter.addItems(albums)
+    }
+
+    override fun onAlbumSelected(title: String) {
+        Snackbar.make(
+            root,
+            getString(R.string.selected_album_, title),
+            Snackbar.LENGTH_LONG
+        ).setAction(R.string.exit) {
+            finish()
+        }.show()
     }
 
     override fun onError(error: String) {

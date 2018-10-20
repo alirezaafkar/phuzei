@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.item_album.view.*
  * Created by Alireza Afkar on 16/9/2018AD.
  */
 class AlbumAdapter(
-    private val album: String?,
+    private var album: String?,
     private val listener: (Album) -> Unit
 ) : RecyclerView.Adapter<AlbumAdapter.ViewHolder>() {
 
@@ -54,6 +54,11 @@ class AlbumAdapter(
 
     fun clearItems() {
         items.clear()
+        notifyDataSetChanged()
+    }
+
+    fun setAlbum(album: String?) {
+        this.album = album
         notifyDataSetChanged()
     }
 }

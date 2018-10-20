@@ -9,4 +9,6 @@
     <string name="sequence">Sequence</string>
     <string name="log_out">Logout</string>
     <string name="muzei">Muzei</string>
+    <string name="exit">Exit</string>
+    <string name="selected_album_">%s selected.</string>
 </resources>
