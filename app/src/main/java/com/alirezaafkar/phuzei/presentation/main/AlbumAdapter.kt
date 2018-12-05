@@ -1,4 +1,4 @@
-package com.alirezaafkar.phuzei.presentation.album
+package com.alirezaafkar.phuzei.presentation.main
 
 import android.view.LayoutInflater
 import android.view.View

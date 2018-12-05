@@ -3,6 +3,7 @@ package com.alirezaafkar.phuzei.data.repository
 import com.alirezaafkar.phuzei.data.api.AlbumsApi
 import com.alirezaafkar.phuzei.data.model.Album
 import com.alirezaafkar.phuzei.data.model.AlbumsResponse
+import com.alirezaafkar.phuzei.data.model.SharedAlbumsResponse
 import com.alirezaafkar.phuzei.util.applyNetworkSchedulers
 import io.reactivex.Single
 import javax.inject.Inject
@@ -12,8 +13,11 @@ import javax.inject.Inject
  */
 class AlbumsRepository @Inject constructor(private var api: AlbumsApi) {
     fun getAlbums(pageToken: String? = null): Single<AlbumsResponse> {
-        return api.getAlbums(pageToken)
-            .compose(applyNetworkSchedulers())
+        return api.getAlbums(pageToken).compose(applyNetworkSchedulers())
+    }
+
+    fun getSharedAlbums(pageToken: String? = null): Single<SharedAlbumsResponse> {
+        return api.getSharedAlbums(pageToken).compose(applyNetworkSchedulers())
     }
 
     fun getAlbum(albumId: String): Single<Album> {

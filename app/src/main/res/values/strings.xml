@@ -11,4 +11,6 @@
     <string name="muzei">Muzei</string>
     <string name="exit">Exit</string>
     <string name="selected_album_">%s selected.</string>
+    <string name="albums">Albums</string>
+    <string name="shared_albums">Shared Albums</string>
 </resources>

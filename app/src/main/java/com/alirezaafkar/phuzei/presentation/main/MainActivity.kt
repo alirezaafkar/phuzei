@@ -1,4 +1,4 @@
-package com.alirezaafkar.phuzei.presentation.album
+package com.alirezaafkar.phuzei.presentation.main
 
 import android.content.Context
 import android.content.Intent
@@ -9,27 +9,26 @@ import androidx.core.net.toUri
 import com.alirezaafkar.phuzei.App
 import com.alirezaafkar.phuzei.MUZEI_PACKAGE_NAME
 import com.alirezaafkar.phuzei.R
-import com.alirezaafkar.phuzei.data.model.Album
+import com.alirezaafkar.phuzei.presentation.album.AlbumFragment
 import com.alirezaafkar.phuzei.presentation.base.MvpActivity
-import com.alirezaafkar.phuzei.util.InfiniteScrollListener
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.activity_album.*
+import com.google.android.material.tabs.TabLayout
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 /**
  * Created by Alireza Afkar on 16/9/2018AD.
  */
-class AlbumActivity : MvpActivity<AlbumContract.Presenter>(), AlbumContract.View {
-    override val presenter: AlbumContract.Presenter = AlbumPresenter(this)
-    override fun getLayout() = R.layout.activity_album
+class MainActivity : MvpActivity<MainContract.Presenter>(), MainContract.View,
+    TabLayout.BaseOnTabSelectedListener<TabLayout.Tab> {
 
-    private lateinit var adapter: AlbumAdapter
+    override val presenter: MainContract.Presenter = MainPresenter(this)
+    override fun getLayout() = R.layout.activity_main
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setSupportActionBar(toolbar)
-        setupRecycler()
-        swipe.setOnRefreshListener { refresh() }
+        tabs.addOnTabSelectedListener(this)
+        replaceFragment(AlbumFragment.TYPE_ALBUMS)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -58,20 +57,26 @@ class AlbumActivity : MvpActivity<AlbumContract.Presenter>(), AlbumContract.View
         return super.onPrepareOptionsMenu(menu)
     }
 
-    private fun setupRecycler() {
-        adapter = AlbumAdapter(presenter.currentAlbum()) {
-            presenter.selectAlbum(it)
-            adapter.setAlbum(it.id)
-        }
-        with(recyclerView) {
-            adapter = this@AlbumActivity.adapter
-            addOnScrollListener(InfiniteScrollListener { presenter.loadMore() })
-        }
+    override fun onTabReselected(tab: TabLayout.Tab?) {
     }
 
-    private fun refresh() {
-        adapter.clearItems()
-        presenter.refresh()
+    override fun onTabUnselected(tab: TabLayout.Tab?) {
+    }
+
+    override fun onTabSelected(tab: TabLayout.Tab) {
+        val albumType = if (tab.position == 0) {
+            AlbumFragment.TYPE_ALBUMS
+        } else {
+            AlbumFragment.TYPE_SHARED_ALBUMS
+        }
+        replaceFragment(albumType)
+    }
+
+    private fun replaceFragment(albumType: Int) {
+        supportFragmentManager
+            ?.beginTransaction()
+            ?.replace(R.id.container, AlbumFragment.newInstance(albumType))
+            ?.commit()
     }
 
     private fun launchMuzei() {
@@ -85,39 +90,13 @@ class AlbumActivity : MvpActivity<AlbumContract.Presenter>(), AlbumContract.View
         startActivity(intent)
     }
 
-    override fun showLoading() {
-        swipe.isRefreshing = true
-    }
-
-    override fun hideLoading() {
-        swipe.isRefreshing = false
-    }
-
-    override fun onAlbums(albums: List<Album>) {
-        adapter.addItems(albums)
-    }
-
-    override fun onAlbumSelected(title: String) {
-        Snackbar.make(
-            root,
-            getString(R.string.selected_album_, title),
-            Snackbar.LENGTH_LONG
-        ).setAction(R.string.exit) {
-            finish()
-        }.show()
-    }
-
-    override fun onError(error: String) {
-        toast(error)
-    }
-
     override fun loggedOut() {
         App.restart(this)
     }
 
     companion object {
         fun start(context: Context) {
-            context.startActivity(Intent(context, AlbumActivity::class.java))
+            context.startActivity(Intent(context, MainActivity::class.java))
         }
     }
 }

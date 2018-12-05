@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.alirezaafkar.phuzei.App
 import com.alirezaafkar.phuzei.data.pref.AppPreferences
-import com.alirezaafkar.phuzei.presentation.album.AlbumActivity
+import com.alirezaafkar.phuzei.presentation.main.MainActivity
 import com.alirezaafkar.phuzei.presentation.login.LoginActivity
 import javax.inject.Inject
 
@@ -21,7 +21,7 @@ class SplashActivity : AppCompatActivity() {
         if (prefs.accessToken.isNullOrEmpty()) {
             LoginActivity.start(this)
         } else {
-            AlbumActivity.start(this)
+            MainActivity.start(this)
         }
         finish()
     }

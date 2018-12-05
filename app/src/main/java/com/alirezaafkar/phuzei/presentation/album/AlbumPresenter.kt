@@ -1,27 +1,33 @@
 package com.alirezaafkar.phuzei.presentation.album
 
 import com.alirezaafkar.phuzei.data.model.Album
+import com.alirezaafkar.phuzei.data.model.BaseAlbumResponse
 import com.alirezaafkar.phuzei.data.pref.AppPreferences
 import com.alirezaafkar.phuzei.data.repository.AlbumsRepository
 import com.alirezaafkar.phuzei.presentation.muzei.PhotosWorker
+import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 /**
- * Created by Alireza Afkar on 16/9/2018AD.
+ * Created by Alireza Afkar on 6/12/2018AD.
  */
 class AlbumPresenter(override val view: AlbumContract.View) : AlbumContract.Presenter {
     override var disposables: CompositeDisposable? = CompositeDisposable()
 
-    private var pageToken: String? = null
-
     @Inject lateinit var prefs: AppPreferences
     @Inject lateinit var repository: AlbumsRepository
+
+    private var pageToken: String? = null
+    private var albumType = AlbumFragment.TYPE_ALBUMS
 
     override fun onCreate() {
         super.onCreate()
         view.mainComponent().inject(this)
-        getAlbums()
+    }
+
+    override fun setAlbumType(type: Int) {
+        albumType = type
     }
 
     override fun selectAlbum(album: Album) {
@@ -32,15 +38,6 @@ class AlbumPresenter(override val view: AlbumContract.View) : AlbumContract.Pres
 
     override fun currentAlbum(): String? = prefs.album
 
-    override fun setShuffleOrder(shuffle: Boolean) {
-        prefs.shuffle = shuffle
-        if (!prefs.album.isNullOrBlank()) {
-            loadAlbumImages(null)
-        }
-    }
-
-    override fun isShuffleOrder() = prefs.shuffle
-
     private fun loadAlbumImages(title: String?) {
         PhotosWorker.enqueueLoad()
         title?.let {
@@ -50,7 +47,7 @@ class AlbumPresenter(override val view: AlbumContract.View) : AlbumContract.Pres
 
     override fun getAlbums() {
         disposables?.add(
-            repository.getAlbums(pageToken)
+            getAlbumsApi()
                 .doOnSubscribe { view.showLoading() }
                 .doAfterTerminate { view.hideLoading() }
                 .subscribe(
@@ -65,6 +62,14 @@ class AlbumPresenter(override val view: AlbumContract.View) : AlbumContract.Pres
         )
     }
 
+    private fun getAlbumsApi(): Single<out BaseAlbumResponse> {
+        return if (albumType == AlbumFragment.TYPE_ALBUMS) {
+            repository.getAlbums(pageToken)
+        } else {
+            repository.getSharedAlbums(pageToken)
+        }
+    }
+
     override fun loadMore() {
         if (!pageToken.isNullOrBlank()) {
             getAlbums()
@@ -74,10 +79,5 @@ class AlbumPresenter(override val view: AlbumContract.View) : AlbumContract.Pres
     override fun refresh() {
         pageToken = null
         getAlbums()
-    }
-
-    override fun logout() {
-        prefs.logout()
-        view.loggedOut()
     }
 }

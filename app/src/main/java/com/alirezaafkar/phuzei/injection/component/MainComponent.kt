@@ -6,6 +6,7 @@ import com.alirezaafkar.phuzei.injection.module.NetworkModule
 import com.alirezaafkar.phuzei.presentation.album.AlbumPresenter
 import com.alirezaafkar.phuzei.presentation.login.LoginActivity
 import com.alirezaafkar.phuzei.presentation.login.LoginPresenter
+import com.alirezaafkar.phuzei.presentation.main.MainPresenter
 import com.alirezaafkar.phuzei.presentation.muzei.PhotosArtProvider
 import com.alirezaafkar.phuzei.presentation.muzei.PhotosArtSource
 import com.alirezaafkar.phuzei.presentation.muzei.PhotosWorker
@@ -22,6 +23,7 @@ import javax.inject.Singleton
 interface MainComponent {
     fun inject(photosWorker: PhotosWorker)
     fun inject(loginActivity: LoginActivity)
+    fun inject(mainPresenter: MainPresenter)
     fun inject(loginPresenter: LoginPresenter)
     fun inject(albumPresenter: AlbumPresenter)
     fun inject(splashActivity: SplashActivity)

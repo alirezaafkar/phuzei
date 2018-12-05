@@ -5,7 +5,7 @@ import com.alirezaafkar.phuzei.presentation.base.BasePresenter
 import com.alirezaafkar.phuzei.presentation.base.BaseView
 
 /**
- * Created by Alireza Afkar on 16/9/2018AD.
+ * Created by Alireza Afkar on 6/12/2018AD.
  */
 interface AlbumContract {
     interface View : BaseView {
@@ -13,18 +13,16 @@ interface AlbumContract {
         fun hideLoading()
         fun onAlbums(albums: List<Album>)
         fun onError(error: String)
-        fun loggedOut()
         fun onAlbumSelected(title: String)
+        fun loadAlbums()
     }
 
     interface Presenter : BasePresenter<View> {
         fun getAlbums()
         fun loadMore()
         fun refresh()
+        fun setAlbumType(type:Int)
         fun selectAlbum(album: Album)
         fun currentAlbum(): String?
-        fun setShuffleOrder(shuffle: Boolean)
-        fun isShuffleOrder(): Boolean
-        fun logout()
     }
 }
