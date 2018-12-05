@@ -28,7 +28,7 @@
         </activity>
 
         <activity
-            android:name="com.alirezaafkar.phuzei.presentation.main.LoginActivity"
+            android:name="com.alirezaafkar.phuzei.presentation.login.LoginActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
 

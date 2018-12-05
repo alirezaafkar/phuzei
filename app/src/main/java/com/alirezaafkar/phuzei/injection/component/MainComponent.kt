@@ -4,8 +4,8 @@ import com.alirezaafkar.phuzei.injection.module.ContextModule
 import com.alirezaafkar.phuzei.injection.module.DataModule
 import com.alirezaafkar.phuzei.injection.module.NetworkModule
 import com.alirezaafkar.phuzei.presentation.album.AlbumPresenter
-import com.alirezaafkar.phuzei.presentation.main.LoginActivity
-import com.alirezaafkar.phuzei.presentation.main.LoginPresenter
+import com.alirezaafkar.phuzei.presentation.login.LoginActivity
+import com.alirezaafkar.phuzei.presentation.login.LoginPresenter
 import com.alirezaafkar.phuzei.presentation.muzei.PhotosArtProvider
 import com.alirezaafkar.phuzei.presentation.muzei.PhotosArtSource
 import com.alirezaafkar.phuzei.presentation.muzei.PhotosWorker

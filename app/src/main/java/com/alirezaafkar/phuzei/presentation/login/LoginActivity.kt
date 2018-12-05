@@ -1,4 +1,4 @@
-package com.alirezaafkar.phuzei.presentation.main
+package com.alirezaafkar.phuzei.presentation.login
 
 import android.content.Context
 import android.content.Intent

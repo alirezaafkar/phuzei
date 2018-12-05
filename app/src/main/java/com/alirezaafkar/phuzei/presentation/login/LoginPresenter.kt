@@ -1,4 +1,4 @@
-package com.alirezaafkar.phuzei.presentation.main
+package com.alirezaafkar.phuzei.presentation.login
 
 import com.alirezaafkar.phuzei.data.repository.TokenRepository
 import io.reactivex.disposables.CompositeDisposable

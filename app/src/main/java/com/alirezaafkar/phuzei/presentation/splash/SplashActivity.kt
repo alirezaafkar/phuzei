@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.alirezaafkar.phuzei.App
 import com.alirezaafkar.phuzei.data.pref.AppPreferences
 import com.alirezaafkar.phuzei.presentation.album.AlbumActivity
-import com.alirezaafkar.phuzei.presentation.main.LoginActivity
+import com.alirezaafkar.phuzei.presentation.login.LoginActivity
 import javax.inject.Inject
 
 /**
