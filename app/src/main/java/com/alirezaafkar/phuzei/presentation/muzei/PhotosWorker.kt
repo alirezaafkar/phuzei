@@ -2,12 +2,7 @@ package com.alirezaafkar.phuzei.presentation.muzei
 
 import android.content.Context
 import androidx.core.net.toUri
-import androidx.work.Constraints
-import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
-import androidx.work.Worker
-import androidx.work.WorkerParameters
+import androidx.work.*
 import com.alirezaafkar.phuzei.App
 import com.alirezaafkar.phuzei.data.model.Media
 import com.alirezaafkar.phuzei.data.model.isImage
@@ -37,7 +32,7 @@ class PhotosWorker(
     }
 
     override fun doWork(): Result {
-        val album = prefs.album ?: return Result.FAILURE
+        val album = prefs.album ?: return Result.failure()
 
         val response = try {
             repository.getAlbumPhotosSync(album, prefs.pageToken)
@@ -54,10 +49,10 @@ class PhotosWorker(
                         it.mediaItems
                     }
             )
-            return Result.SUCCESS
+            return Result.success()
         } ?: kotlin.run {
             prefs.pageToken = null
-            return Result.FAILURE
+            return Result.failure()
         }
     }
 

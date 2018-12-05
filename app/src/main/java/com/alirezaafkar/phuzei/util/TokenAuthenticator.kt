@@ -21,7 +21,7 @@ class TokenAuthenticator @Inject constructor(
     private val prefs: AppPreferences
 ) : Authenticator {
 
-    override fun authenticate(route: Route, response: Response): Request? {
+    override fun authenticate(route: Route?, response: Response): Request? {
         val accessToken = refreshToken() ?: return null
 
         return response.request().newBuilder()
