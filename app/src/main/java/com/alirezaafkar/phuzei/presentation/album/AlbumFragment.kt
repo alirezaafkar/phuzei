@@ -59,7 +59,9 @@ class AlbumFragment : MvpFragment<AlbumContract.Presenter>(), AlbumContract.View
     }
 
     override fun onAlbums(albums: List<Album>) {
-        adapter.addItems(albums)
+        if (albums.isNotEmpty()) {
+            adapter.addItems(albums)
+        }
     }
 
     override fun loadAlbums() {
