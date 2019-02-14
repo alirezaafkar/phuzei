@@ -50,14 +50,14 @@ class AlbumPresenter(override val view: AlbumContract.View) : AlbumContract.Pres
             getAlbumsApi()
                 .doOnSubscribe { view.showLoading() }
                 .doAfterTerminate { view.hideLoading() }
-                .subscribe(
-                    {
-                        pageToken = it.nextPageToken
-                        view.onAlbums(it.albums)
-                    },
-                    {
-                        view.onError(it.localizedMessage)
+                .subscribe({ response ->
+                    pageToken = response.nextPageToken
+                    response.albums?.let {
+                        view.onAlbums(it)
                     }
+                }, {
+                    view.onError(it.localizedMessage)
+                }
                 )
         )
     }
@@ -71,7 +71,7 @@ class AlbumPresenter(override val view: AlbumContract.View) : AlbumContract.Pres
     }
 
     override fun loadMore() {
-        if (!pageToken.isNullOrBlank()) {
+        if (pageToken?.isNotBlank() == true) {
             getAlbums()
         }
     }
