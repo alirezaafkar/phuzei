@@ -5,5 +5,5 @@ package com.alirezaafkar.phuzei.data.model
  */
 abstract class BaseAlbumResponse {
     abstract var albums: List<Album>?
-    abstract var nextPageToken: String
+    abstract var nextPageToken: String?
 }

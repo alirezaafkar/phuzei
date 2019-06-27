@@ -2,7 +2,6 @@ package com.alirezaafkar.phuzei.util
 
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 
 
@@ -33,22 +32,18 @@ class InfiniteScrollListener(private val listener: () -> Unit) : androidx.recycl
     }
 
     private fun getFirstVisibleItem(recyclerView: androidx.recyclerview.widget.RecyclerView, into: IntArray): Int {
-        val layoutManager = recyclerView.layoutManager
-        return when (layoutManager) {
-            is androidx.recyclerview.widget.LinearLayoutManager -> layoutManager.findFirstVisibleItemPosition()
-            is androidx.recyclerview.widget.GridLayoutManager -> layoutManager.findFirstVisibleItemPosition()
-            is androidx.recyclerview.widget.StaggeredGridLayoutManager -> {
-                layoutManager.findFirstCompletelyVisibleItemPositions(into)[0]
-            }
+        return when (val layoutManager = recyclerView.layoutManager) {
+            is LinearLayoutManager -> layoutManager.findFirstVisibleItemPosition()
+            is GridLayoutManager -> layoutManager.findFirstVisibleItemPosition()
+            is StaggeredGridLayoutManager -> layoutManager.findFirstCompletelyVisibleItemPositions(into)[0]
             else -> 0
         }
     }
 
     private fun getSpanCount(recyclerView: androidx.recyclerview.widget.RecyclerView): Int {
-        val layoutManager = recyclerView.layoutManager
-        return when (layoutManager) {
-            is androidx.recyclerview.widget.GridLayoutManager -> layoutManager.spanCount
-            is androidx.recyclerview.widget.StaggeredGridLayoutManager -> layoutManager.spanCount
+        return when (val layoutManager = recyclerView.layoutManager) {
+            is GridLayoutManager -> layoutManager.spanCount
+            is StaggeredGridLayoutManager -> layoutManager.spanCount
             else -> 1
         }
     }

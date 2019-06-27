@@ -18,6 +18,7 @@ class AlbumPresenter(override val view: AlbumContract.View) : AlbumContract.Pres
     @Inject lateinit var prefs: AppPreferences
     @Inject lateinit var repository: AlbumsRepository
 
+    private var loading = false
     private var pageToken: String? = null
     private var albumType = AlbumFragment.TYPE_ALBUMS
 
@@ -48,17 +49,23 @@ class AlbumPresenter(override val view: AlbumContract.View) : AlbumContract.Pres
     override fun getAlbums() {
         disposables?.add(
             getAlbumsApi()
-                .doOnSubscribe { view.showLoading() }
+                .doOnSubscribe {
+                    loading = true
+                    view.showLoading()
+                }
                 .doAfterTerminate { view.hideLoading() }
-                .subscribe({ response ->
-                    pageToken = response.nextPageToken
-                    response.albums?.let {
-                        view.onAlbums(it)
+                .subscribe({
+                    loading = false
+                    pageToken = it.nextPageToken
+                    if (it.albums != null) {
+                        view.onAlbums(it.albums!!)
+                    } else {
+                        loadMore()
                     }
                 }, {
+                    loading = false
                     view.onError(it.localizedMessage)
-                }
-                )
+                })
         )
     }
 
@@ -71,7 +78,7 @@ class AlbumPresenter(override val view: AlbumContract.View) : AlbumContract.Pres
     }
 
     override fun loadMore() {
-        if (pageToken?.isNotBlank() == true) {
+        if (!pageToken.isNullOrBlank() && !loading) {
             getAlbums()
         }
     }
