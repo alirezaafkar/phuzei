@@ -10,6 +10,7 @@ import com.alirezaafkar.phuzei.data.repository.PhotosRepository
 import com.alirezaafkar.phuzei.data.repository.TokenRepository
 import dagger.Module
 import dagger.Provides
+import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Singleton
 
 /**
@@ -17,6 +18,7 @@ import javax.inject.Singleton
  */
 @Module(includes = [ContextModule::class])
 class DataModule {
+
     @Provides
     @Singleton
     fun provideAppPreferences(context: Context): AppPreferences {
@@ -39,5 +41,10 @@ class DataModule {
     @Singleton
     fun providePhotosRepository(api: PhotosApi): PhotosRepository {
         return PhotosRepository(api)
+    }
+
+    @Provides
+    fun provideDisposable(): CompositeDisposable {
+        return CompositeDisposable()
     }
 }

@@ -5,51 +5,68 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import com.alirezaafkar.phuzei.App
 import com.alirezaafkar.phuzei.MUZEI_PACKAGE_NAME
 import com.alirezaafkar.phuzei.R
 import com.alirezaafkar.phuzei.presentation.album.AlbumFragment
-import com.alirezaafkar.phuzei.presentation.base.MvpActivity
-import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
-
+import javax.inject.Inject
 
 /**
  * Created by Alireza Afkar on 16/9/2018AD.
  */
-class MainActivity : MvpActivity<MainContract.Presenter>(), MainContract.View,
-    TabLayout.BaseOnTabSelectedListener<TabLayout.Tab> {
+class MainActivity : AppCompatActivity() {
 
-    override val presenter: MainContract.Presenter = MainPresenter(this)
-    override fun getLayout() = R.layout.activity_main
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val viewModel: MainViewModel by viewModels { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        App.get(this).component?.inject(this)
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-        tabs.addOnTabSelectedListener(this)
-        replaceFragment(AlbumFragment.TYPE_ALBUMS)
+
+        navigation.setOnNavigationItemSelectedListener {
+            val albumType = if (it.itemId == R.id.action_albums) {
+                AlbumFragment.TYPE_ALBUMS
+            } else {
+                AlbumFragment.TYPE_SHARED_ALBUMS
+            }
+            replaceFragment(albumType)
+            true
+        }
+        navigation.selectedItemId = R.id.action_albums
+
+        viewModel.logoutObservable.observe(this) {
+            App.restart(this)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         super.onOptionsItemSelected(item)
-        when {
-            item.itemId == R.id.action_sequence -> {
-                presenter.setShuffleOrder(false)
+        when (item.itemId) {
+            R.id.action_sequence -> {
+                viewModel.onShuffleOrder(false)
                 item.isChecked = true
             }
-            item.itemId == R.id.action_shuffle -> {
-                presenter.setShuffleOrder(true)
+            R.id.action_shuffle -> {
+                viewModel.onShuffleOrder(true)
                 item.isChecked = true
             }
-            item.itemId == R.id.action_log_out -> presenter.logout()
-            item.itemId == R.id.action_muzei -> launchMuzei()
+            R.id.action_log_out -> viewModel.onLogout()
+            R.id.action_muzei -> launchMuzei()
         }
         return true
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        if (presenter.isShuffleOrder()) {
+        if (viewModel.isShuffleOrder) {
             menu?.findItem(R.id.action_shuffle)?.isChecked = true
         } else {
             menu?.findItem(R.id.action_order)?.isChecked = true
@@ -57,26 +74,11 @@ class MainActivity : MvpActivity<MainContract.Presenter>(), MainContract.View,
         return super.onPrepareOptionsMenu(menu)
     }
 
-    override fun onTabReselected(tab: TabLayout.Tab?) {
-    }
-
-    override fun onTabUnselected(tab: TabLayout.Tab?) {
-    }
-
-    override fun onTabSelected(tab: TabLayout.Tab) {
-        val albumType = if (tab.position == 0) {
-            AlbumFragment.TYPE_ALBUMS
-        } else {
-            AlbumFragment.TYPE_SHARED_ALBUMS
-        }
-        replaceFragment(albumType)
-    }
-
     private fun replaceFragment(albumType: Int) {
         supportFragmentManager
-            ?.beginTransaction()
-            ?.replace(R.id.container, AlbumFragment.newInstance(albumType))
-            ?.commit()
+            .beginTransaction()
+            .replace(R.id.container, AlbumFragment.newInstance(albumType))
+            .commit()
     }
 
     private fun launchMuzei() {
@@ -88,10 +90,6 @@ class MainActivity : MvpActivity<MainContract.Presenter>(), MainContract.View,
             }
         }
         startActivity(intent)
-    }
-
-    override fun loggedOut() {
-        App.restart(this)
     }
 
     companion object {

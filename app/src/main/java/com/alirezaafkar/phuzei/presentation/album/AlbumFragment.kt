@@ -1,30 +1,75 @@
 package com.alirezaafkar.phuzei.presentation.album
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
+import com.alirezaafkar.phuzei.App
 import com.alirezaafkar.phuzei.R
-import com.alirezaafkar.phuzei.data.model.Album
-import com.alirezaafkar.phuzei.presentation.base.MvpFragment
 import com.alirezaafkar.phuzei.presentation.main.AlbumAdapter
 import com.alirezaafkar.phuzei.util.InfiniteScrollListener
 import com.alirezaafkar.phuzei.util.toast
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_albums.*
+import javax.inject.Inject
 
 /**
  * Created by Alireza Afkar on 6/12/2018AD.
  */
-class AlbumFragment : MvpFragment<AlbumContract.Presenter>(), AlbumContract.View {
-    override val presenter: AlbumContract.Presenter = AlbumPresenter(this)
-    override fun getLayoutRes() = R.layout.fragment_albums
+class AlbumFragment : Fragment() {
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val viewModel: AlbumViewModel by activityViewModels { viewModelFactory }
 
     private lateinit var adapter: AlbumAdapter
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        presenter.setAlbumType(arguments?.getInt(KEY_TYPE, TYPE_ALBUMS) ?: TYPE_ALBUMS)
-        presenter.getAlbums()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        App.get(requireContext()).component?.inject(this)
+
+        super.onCreate(savedInstanceState)
+
+        with(viewModel) {
+            val owner = this@AlbumFragment
+            selectAlbumObservable.observe(owner) {
+                Snackbar.make(
+                    swipe,
+                    getString(R.string.selected_album_, it),
+                    Snackbar.LENGTH_LONG
+                ).setAction(R.string.exit) {
+                    requireActivity().finish()
+                }.show()
+            }
+
+            albumsObservable.observe(owner) {
+                if (it.isNotEmpty()) {
+                    adapter.addItems(it)
+                }
+            }
+
+            loadingObservable.observe(owner) {
+                swipe.isRefreshing = it
+            }
+
+            errorObservable.observe(owner) {
+                requireContext().toast(it)
+            }
+
+            subscribe(arguments?.getInt(KEY_TYPE, TYPE_ALBUMS) ?: TYPE_ALBUMS)
+        }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return layoutInflater.inflate(R.layout.fragment_albums, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -34,52 +79,20 @@ class AlbumFragment : MvpFragment<AlbumContract.Presenter>(), AlbumContract.View
     }
 
     private fun setupRecycler() {
-        adapter = AlbumAdapter(presenter.currentAlbum()) {
-            presenter.selectAlbum(it)
+        adapter = AlbumAdapter(viewModel.currentAlbum) {
+            viewModel.onSelectAlbum(it)
             adapter.setAlbum(it.id)
         }
 
         with(recyclerView) {
             adapter = this@AlbumFragment.adapter
-            addOnScrollListener(InfiniteScrollListener { presenter.loadMore() })
+            addOnScrollListener(InfiniteScrollListener { viewModel.onLoadMore() })
         }
     }
 
     private fun refresh() {
         adapter.clearItems()
-        presenter.refresh()
-    }
-
-    override fun showLoading() {
-        swipe.isRefreshing = true
-    }
-
-    override fun hideLoading() {
-        swipe.isRefreshing = false
-    }
-
-    override fun onAlbums(albums: List<Album>) {
-        if (albums.isNotEmpty()) {
-            adapter.addItems(albums)
-        }
-    }
-
-    override fun loadAlbums() {
-        presenter.loadMore()
-    }
-
-    override fun onAlbumSelected(title: String) {
-        Snackbar.make(
-            swipe,
-            getString(R.string.selected_album_, title),
-            Snackbar.LENGTH_LONG
-        ).setAction(R.string.exit) {
-            requireActivity().finish()
-        }.show()
-    }
-
-    override fun onError(error: String) {
-        context?.toast(error)
+        viewModel.onRefresh()
     }
 
     companion object {

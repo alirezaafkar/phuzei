@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_albums"
+        android:icon="@drawable/ic_image"
+        android:title="@string/albums"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_shared_albums"
+        android:icon="@drawable/ic_collections"
+        android:title="@string/shared_albums"
+        app:showAsAction="ifRoom" />
+</menu>

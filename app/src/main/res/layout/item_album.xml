@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,7 +9,7 @@
     android:focusable="true"
     android:foreground="?attr/selectableItemBackgroundBorderless"
     android:orientation="vertical"
-    app:cardCornerRadius="8dp"
+    app:cardCornerRadius="2dp"
     app:cardPreventCornerOverlap="true"
     app:cardUseCompatPadding="true">
 
@@ -28,21 +27,23 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="ContentDescription"
-            tools:src="@tools:sample/avatars"/>
+            tools:src="@tools:sample/avatars" />
 
         <TextView
             android:id="@+id/name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:maxLines="1"
+            android:ellipsize="end"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
-            android:textColor="@color/black"
+            android:singleLine="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/image"
-            tools:text="@tools:sample/full_names"/>
+            tools:text="@tools:sample/full_names" />
 
         <TextView
             android:id="@+id/count"
@@ -54,11 +55,12 @@
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:paddingBottom="4dp"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/name"
-            tools:text="113 items"/>
+            tools:text="113 items" />
 
         <ImageView
             android:id="@+id/tick"
@@ -70,6 +72,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/image"
-            tools:ignore="ContentDescription"/>
+            tools:ignore="ContentDescription" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
