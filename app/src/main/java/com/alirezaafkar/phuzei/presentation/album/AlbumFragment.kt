@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import com.alirezaafkar.phuzei.App
@@ -25,7 +25,7 @@ class AlbumFragment : Fragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    private val viewModel: AlbumViewModel by activityViewModels { viewModelFactory }
+    private val viewModel: AlbumViewModel by viewModels { viewModelFactory }
 
     private lateinit var adapter: AlbumAdapter
 
@@ -59,8 +59,6 @@ class AlbumFragment : Fragment() {
             errorObservable.observe(owner) {
                 requireContext().toast(it)
             }
-
-            subscribe(arguments?.getInt(KEY_TYPE, TYPE_ALBUMS) ?: TYPE_ALBUMS)
         }
     }
 
@@ -76,6 +74,7 @@ class AlbumFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         swipe.setOnRefreshListener { refresh() }
         setupRecycler()
+        viewModel.subscribe(arguments?.getInt(KEY_TYPE, TYPE_ALBUMS) ?: TYPE_ALBUMS)
     }
 
     private fun setupRecycler() {
