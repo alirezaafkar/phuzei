@@ -12,4 +12,4 @@ data class FeatureFilter(val includedFeatures: List<String>)
 
 data class ContentFilter(val includedContentCategories: List<String>)
 
-const val FAVORITE = "FAVORITE"
+const val FAVORITES = "FAVORITES"

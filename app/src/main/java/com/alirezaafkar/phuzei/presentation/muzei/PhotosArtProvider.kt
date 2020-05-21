@@ -11,7 +11,7 @@ class PhotosArtProvider : MuzeiArtProvider() {
 
     override fun onLoadRequested(initial: Boolean) {
         val ctx = context ?: return
-        val provider = ProviderContract.getProviderClient(ctx, BuildConfig.APPLICATION_ID)
+        val provider = ProviderContract.getProviderClient(ctx, BuildConfig.PHUZEI_AUTHORITY)
         ctx.contentResolver.delete(provider.contentUri, null, null)
         PhotosWorker.enqueueLoad(ctx)
     }

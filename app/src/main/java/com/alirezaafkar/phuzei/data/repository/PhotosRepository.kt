@@ -2,7 +2,7 @@ package com.alirezaafkar.phuzei.data.repository
 
 import com.alirezaafkar.phuzei.data.api.PhotosApi
 import com.alirezaafkar.phuzei.data.model.ContentFilter
-import com.alirezaafkar.phuzei.data.model.FAVORITE
+import com.alirezaafkar.phuzei.data.model.FAVORITES
 import com.alirezaafkar.phuzei.data.model.FeatureFilter
 import com.alirezaafkar.phuzei.data.model.Filters
 import com.alirezaafkar.phuzei.data.model.Search
@@ -63,8 +63,8 @@ class PhotosRepository @Inject constructor(private var api: PhotosApi) {
         search = if (albumId.isNullOrEmpty() && category.isEmpty()) {
             return null
         } else if (albumId.isNullOrEmpty()) {
-            val filter = if (category.equals(FAVORITE, true)) {
-                Filters(featureFilter = FeatureFilter(listOf(FAVORITE)))
+            val filter = if (category.equals(FAVORITES, true)) {
+                Filters(featureFilter = FeatureFilter(listOf(FAVORITES)))
             } else {
                 Filters(contentFilter = ContentFilter(listOf(category.toUpperCase(Locale.US))))
             }

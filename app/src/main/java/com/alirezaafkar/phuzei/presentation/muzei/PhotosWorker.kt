@@ -1,7 +1,6 @@
 package com.alirezaafkar.phuzei.presentation.muzei
 
 import android.content.Context
-import android.net.Uri
 import androidx.core.net.toUri
 import androidx.work.Constraints
 import androidx.work.NetworkType
@@ -65,7 +64,7 @@ class PhotosWorker(
     private fun onPhotosResult(medias: List<Media>) {
         val provider = ProviderContract.getProviderClient(
             applicationContext,
-            BuildConfig.APPLICATION_ID
+            BuildConfig.PHUZEI_AUTHORITY
         )
         medias.asSequence()
             .filter(Media::isImage)

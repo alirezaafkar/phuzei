@@ -43,7 +43,7 @@
 
         <provider
             android:name=".presentation.muzei.PhotosArtProvider"
-            android:authorities="photosAuthority"
+            android:authorities="${phuzeiAuthority}"
             android:exported="true"
             android:label="@string/app_name"
             android:permission="com.google.android.apps.muzei.api.ACCESS_PROVIDER">
