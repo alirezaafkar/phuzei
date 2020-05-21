@@ -7,4 +7,4 @@
 <br/>
 <br/>
 
-<img src="/preview.jpg"/>
+<img src="/preview.png"/>
