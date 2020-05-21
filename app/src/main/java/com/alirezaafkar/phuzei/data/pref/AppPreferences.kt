@@ -8,6 +8,7 @@ import androidx.preference.PreferenceManager
  * Created by Alireza Afkar on 16/9/2018AD.
  */
 class AppPreferences(context: Context) {
+
     private val preferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     var accessToken: String?
@@ -34,6 +35,10 @@ class AppPreferences(context: Context) {
         get() = preferences.getBoolean(SHUFFLE, false)
         set(value) = preferences.edit { putBoolean(SHUFFLE, value) }
 
+    var category: String
+        get() = preferences.getString(CATEGORY, "") ?: ""
+        set(value) = preferences.edit { putString(CATEGORY, value) }
+
     fun logout() {
         preferences.edit {
             putString(ALBUM, null)
@@ -48,6 +53,7 @@ class AppPreferences(context: Context) {
     companion object {
         private const val ALBUM = "album"
         private const val SHUFFLE = "shuffle"
+        private const val CATEGORY = "category"
         private const val PAGE_TOKEN = "page_token"
         private const val TOKEN_TYPE = "token_type"
         private const val ACCESS_TOKEN = "access_token"
@@ -56,4 +62,4 @@ class AppPreferences(context: Context) {
 }
 
 fun AppPreferences.token(token: String? = accessToken) =
-        if (token.isNullOrBlank()) "" else "$tokenType $token"
+    if (token.isNullOrBlank()) "" else "$tokenType $token"

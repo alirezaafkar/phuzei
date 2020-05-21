@@ -64,12 +64,6 @@ class LoginActivity : AppCompatActivity() {
         checkResponse(intent?.data ?: return)
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        menu?.findItem(R.id.action_order)?.isVisible = false
-        menu?.setGroupVisible(R.id.action_other_group, false)
-        return super.onPrepareOptionsMenu(menu)
-    }
-
     private fun checkResponse(data: Uri) {
         if (data.scheme?.equals(BASE_REDIRECT_URI) == false) return
 

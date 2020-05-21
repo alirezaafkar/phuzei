@@ -19,6 +19,7 @@ import javax.inject.Inject
  * Created by Alireza Afkar on 16/9/2018AD.
  */
 class PhotosArtSource : RemoteMuzeiArtSource(SOURCE_NAME) {
+
     @Inject
     lateinit var repository: PhotosRepository
 
@@ -32,17 +33,17 @@ class PhotosArtSource : RemoteMuzeiArtSource(SOURCE_NAME) {
 
     @SuppressLint("CheckResult")
     override fun onTryUpdate(reason: Int) {
-        repository.getAlbumPhotos(prefs.album ?: return)
-                .subscribe(
-                        {
-                            prefs.pageToken = it.nextPageToken
-                            onPhotosResult(it.mediaItems.filter(Media::isImage))
-                        },
-                        {
-                            prefs.pageToken = null
-                            Log.e(TAG, it.message, it)
-                        }
-                )
+        repository.getAlbumPhotos(prefs.album, prefs.category)
+            .subscribe(
+                {
+                    prefs.pageToken = it.nextPageToken
+                    onPhotosResult(it.mediaItems.filter(Media::isImage))
+                },
+                {
+                    prefs.pageToken = null
+                    Log.e(TAG, it.message, it)
+                }
+            )
     }
 
     private fun onPhotosResult(medias: List<Media>) {
@@ -72,13 +73,13 @@ class PhotosArtSource : RemoteMuzeiArtSource(SOURCE_NAME) {
 
     private fun publish(photo: Media) {
         publishArtwork(
-                Artwork.Builder()
-                        .token(photo.id)
-                        .title(photo.filename)
-                        .byline(photo.description)
-                        .viewIntent(Intent(Intent.ACTION_VIEW, photo.productUrl.toUri()))
-                        .imageUri(photo.largeUrl().toUri())
-                        .build()
+            Artwork.Builder()
+                .token(photo.id)
+                .title(photo.filename)
+                .byline(photo.description)
+                .viewIntent(Intent(Intent.ACTION_VIEW, photo.productUrl.toUri()))
+                .imageUri(photo.largeUrl().toUri())
+                .build()
         )
     }
 

@@ -12,5 +12,11 @@
         android:id="@+id/action_shared_albums"
         android:icon="@drawable/ic_collections"
         android:title="@string/shared_albums"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_settings"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/settings"
         app:showAsAction="ifRoom" />
 </menu>

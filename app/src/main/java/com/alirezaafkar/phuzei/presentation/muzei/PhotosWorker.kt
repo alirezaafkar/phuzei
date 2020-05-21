@@ -2,7 +2,12 @@ package com.alirezaafkar.phuzei.presentation.muzei
 
 import android.content.Context
 import androidx.core.net.toUri
-import androidx.work.*
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import com.alirezaafkar.phuzei.App
 import com.alirezaafkar.phuzei.data.model.Media
 import com.alirezaafkar.phuzei.data.model.isImage
@@ -18,12 +23,13 @@ import javax.inject.Inject
  * Created by Alireza Afkar on 16/9/2018AD.
  */
 class PhotosWorker(
-        context: Context,
-        workerParams: WorkerParameters
+    context: Context,
+    workerParams: WorkerParameters
 ) : Worker(context, workerParams) {
 
     @Inject
     lateinit var repository: PhotosRepository
+
     @Inject
     lateinit var prefs: AppPreferences
 
@@ -32,10 +38,8 @@ class PhotosWorker(
     }
 
     override fun doWork(): Result {
-        val album = prefs.album ?: return Result.failure()
-
         val response = try {
-            repository.getAlbumPhotosSync(album, prefs.pageToken)
+            repository.getAlbumPhotosSync(prefs.album, prefs.category, prefs.pageToken)
         } catch (e: IOException) {
             null
         }
@@ -43,11 +47,11 @@ class PhotosWorker(
         response?.let {
             prefs.pageToken = it.nextPageToken
             onPhotosResult(
-                    if (prefs.shuffle) {
-                        it.mediaItems.shuffled()
-                    } else {
-                        it.mediaItems
-                    }
+                if (prefs.shuffle) {
+                    it.mediaItems.shuffled()
+                } else {
+                    it.mediaItems
+                }
             )
             return Result.success()
         } ?: kotlin.run {
@@ -59,33 +63,33 @@ class PhotosWorker(
     private fun onPhotosResult(medias: List<Media>) {
         deleteAllImages()
         medias
-                .asSequence()
-                .filter(Media::isImage)
-                .map { photo ->
-                    Artwork().apply {
-                        token = photo.id
-                        title = photo.filename
-                        byline = photo.description
-                        webUri = photo.productUrl.toUri()
-                        persistentUri = photo.largeUrl().toUri()
+            .asSequence()
+            .filter(Media::isImage)
+            .map { photo ->
+                Artwork().apply {
+                    token = photo.id
+                    title = photo.filename
+                    byline = photo.description
+                    webUri = photo.productUrl.toUri()
+                    persistentUri = photo.largeUrl().toUri()
 
-                    }
                 }
-                .toList().forEach { artwork ->
-                    ProviderContract.Artwork.addArtwork(
-                            applicationContext,
-                            PhotosArtProvider::class.java,
-                            artwork
-                    )
-                }
+            }
+            .toList().forEach { artwork ->
+                ProviderContract.Artwork.addArtwork(
+                    applicationContext,
+                    PhotosArtProvider::class.java,
+                    artwork
+                )
+            }
     }
 
     private fun deleteAllImages() {
         val contentUri = ProviderContract.Artwork.getContentUri(
-                applicationContext, PhotosArtProvider::class.java
+            applicationContext, PhotosArtProvider::class.java
         )
         applicationContext.contentResolver.delete(
-                contentUri, null, null
+            contentUri, null, null
         )
     }
 
@@ -93,13 +97,13 @@ class PhotosWorker(
         internal fun enqueueLoad() {
             val workManager = WorkManager.getInstance()
             workManager.enqueue(
-                    OneTimeWorkRequestBuilder<PhotosWorker>()
-                            .setConstraints(
-                                    Constraints.Builder()
-                                            .setRequiredNetworkType(NetworkType.CONNECTED)
-                                            .build()
-                            )
+                OneTimeWorkRequestBuilder<PhotosWorker>()
+                    .setConstraints(
+                        Constraints.Builder()
+                            .setRequiredNetworkType(NetworkType.CONNECTED)
                             .build()
+                    )
+                    .build()
             )
         }
     }

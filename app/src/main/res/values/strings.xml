@@ -13,4 +13,11 @@
     <string name="selected_album_">%s selected.</string>
     <string name="albums">Albums</string>
     <string name="shared_albums">Shared Albums</string>
+    <string name="settings">Settings</string>
+    <string name="category">Category</string>
+    <string name="all">All</string>
+    <string name="favorites">Favorites</string>
+    <string name="muzei_description">Open Muzei</string>
+    <string name="logout_description">Clear stored data</string>
+    <string name="category_description">Select category from settings</string>
 </resources>

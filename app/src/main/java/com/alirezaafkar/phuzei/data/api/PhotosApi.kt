@@ -11,6 +11,7 @@ import retrofit2.http.POST
  * Created by Alireza Afkar on 14/9/2018AD.
  */
 interface PhotosApi {
+
     @POST("mediaItems:search")
     fun getAlbumPhotos(@Body search: Search): Single<SearchResponse>
 
@@ -19,4 +20,7 @@ interface PhotosApi {
 
     @POST("mediaItems")
     fun getPhotos(): Single<SearchResponse>
+
+    @POST("mediaItems")
+    fun getPhotosCall(): Call<SearchResponse>
 }

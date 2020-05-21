@@ -41,7 +41,7 @@ class AlbumViewModel @Inject constructor(
 
     fun subscribe(albumType: Int) {
         this.albumType = albumType
-        getAlbums()
+        onRefresh()
     }
 
     fun onSelectAlbum(album: Album) {
@@ -88,6 +88,26 @@ class AlbumViewModel @Inject constructor(
     private fun getAlbumsApi(): Single<out BaseAlbumResponse> {
         return if (albumType == AlbumFragment.TYPE_ALBUMS) {
             repository.getAlbums(pageToken)
+                .flatMap {
+                    if (pageToken.isNullOrEmpty()) {
+                        val items = mutableListOf<Album>().apply {
+                            add(
+                                Album(
+                                    id = "",
+                                    itemsCount = "",
+                                    coverPhotoUrl = "",
+                                    title = "by Category"
+                                )
+                            )
+                            it.albums?.let { albums ->
+                                addAll(albums)
+                            }
+                        }
+                        Single.fromCallable { it.copy(albums = items) }
+                    } else {
+                        Single.fromCallable { it }
+                    }
+                }
         } else {
             repository.getSharedAlbums(pageToken)
         }
