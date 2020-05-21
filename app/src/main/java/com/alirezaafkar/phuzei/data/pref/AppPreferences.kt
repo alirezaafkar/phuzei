@@ -1,8 +1,8 @@
 package com.alirezaafkar.phuzei.data.pref
 
 import android.content.Context
-import android.preference.PreferenceManager
 import androidx.core.content.edit
+import androidx.preference.PreferenceManager
 
 /**
  * Created by Alireza Afkar on 16/9/2018AD.
@@ -56,4 +56,4 @@ class AppPreferences(context: Context) {
 }
 
 fun AppPreferences.token(token: String? = accessToken) =
-    if (token.isNullOrBlank()) "" else "$tokenType $token"
+        if (token.isNullOrBlank()) "" else "$tokenType $token"
