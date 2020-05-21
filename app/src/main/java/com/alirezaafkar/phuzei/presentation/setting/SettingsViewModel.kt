@@ -7,7 +7,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.alirezaafkar.phuzei.MUZEI_PACKAGE_NAME
 import com.alirezaafkar.phuzei.data.pref.AppPreferences
-import com.alirezaafkar.phuzei.presentation.muzei.PhotosWorker
 import com.alirezaafkar.phuzei.util.SingleLiveEvent
 import javax.inject.Inject
 
@@ -30,6 +29,9 @@ class SettingsViewModel @Inject constructor(
     private val _intentObservable = SingleLiveEvent<Intent>()
     val intentObservable: LiveData<Intent> = _intentObservable
 
+    private val _enqueueImages = SingleLiveEvent<Unit>()
+    val enqueueImages: LiveData<Unit> = _enqueueImages
+
     fun subscribe() {
         _isShuffleObservable.value = prefs.shuffle
         _categoryObservable.value = prefs.category
@@ -37,13 +39,13 @@ class SettingsViewModel @Inject constructor(
 
     fun onShuffleOrder(shuffle: Boolean) {
         prefs.shuffle = shuffle
-        PhotosWorker.enqueueLoad()
+        _enqueueImages.value = null
     }
 
     fun onSelectCategory(category: String) {
         prefs.category = category
         _categoryObservable.value = category
-        PhotosWorker.enqueueLoad()
+        _enqueueImages.value = null
     }
 
     fun onContact() {

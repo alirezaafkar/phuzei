@@ -12,6 +12,7 @@ import androidx.lifecycle.observe
 import com.alirezaafkar.phuzei.App
 import com.alirezaafkar.phuzei.R
 import com.alirezaafkar.phuzei.presentation.main.AlbumAdapter
+import com.alirezaafkar.phuzei.presentation.muzei.PhotosWorker
 import com.alirezaafkar.phuzei.util.InfiniteScrollListener
 import com.alirezaafkar.phuzei.util.toast
 import com.google.android.material.snackbar.Snackbar
@@ -58,6 +59,10 @@ class AlbumFragment : Fragment() {
 
             errorObservable.observe(owner) {
                 requireContext().toast(it)
+            }
+
+            enqueueImages.observe(owner) {
+                PhotosWorker.enqueueLoad(requireContext())
             }
         }
     }

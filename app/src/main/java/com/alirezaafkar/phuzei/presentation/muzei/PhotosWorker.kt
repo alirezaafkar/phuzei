@@ -1,6 +1,7 @@
 package com.alirezaafkar.phuzei.presentation.muzei
 
 import android.content.Context
+import android.net.Uri
 import androidx.core.net.toUri
 import androidx.work.Constraints
 import androidx.work.NetworkType
@@ -9,6 +10,7 @@ import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.alirezaafkar.phuzei.App
+import com.alirezaafkar.phuzei.BuildConfig
 import com.alirezaafkar.phuzei.data.model.Media
 import com.alirezaafkar.phuzei.data.model.isImage
 import com.alirezaafkar.phuzei.data.model.largeUrl
@@ -61,9 +63,11 @@ class PhotosWorker(
     }
 
     private fun onPhotosResult(medias: List<Media>) {
-        deleteAllImages()
-        medias
-            .asSequence()
+        val provider = ProviderContract.getProviderClient(
+            applicationContext,
+            BuildConfig.APPLICATION_ID
+        )
+        medias.asSequence()
             .filter(Media::isImage)
             .map { photo ->
                 Artwork().apply {
@@ -75,27 +79,14 @@ class PhotosWorker(
 
                 }
             }
-            .toList().forEach { artwork ->
-                ProviderContract.Artwork.addArtwork(
-                    applicationContext,
-                    PhotosArtProvider::class.java,
-                    artwork
-                )
+            .toList().forEach {
+                provider.addArtwork(it)
             }
     }
 
-    private fun deleteAllImages() {
-        val contentUri = ProviderContract.Artwork.getContentUri(
-            applicationContext, PhotosArtProvider::class.java
-        )
-        applicationContext.contentResolver.delete(
-            contentUri, null, null
-        )
-    }
-
     companion object {
-        internal fun enqueueLoad() {
-            val workManager = WorkManager.getInstance()
+        internal fun enqueueLoad(context: Context) {
+            val workManager = WorkManager.getInstance(context)
             workManager.enqueue(
                 OneTimeWorkRequestBuilder<PhotosWorker>()
                     .setConstraints(

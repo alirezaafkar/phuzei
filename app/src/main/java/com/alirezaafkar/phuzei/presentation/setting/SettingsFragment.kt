@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import com.alirezaafkar.phuzei.App
 import com.alirezaafkar.phuzei.R
+import com.alirezaafkar.phuzei.presentation.muzei.PhotosWorker
 import kotlinx.android.synthetic.main.fragment_settings.*
 import javax.inject.Inject
 
@@ -36,24 +37,32 @@ class SettingsFragment : Fragment() {
         App.get(requireContext()).component?.inject(this)
         super.onCreate(savedInstanceState)
 
-        viewModel.categoryObservable.observe(this) {
-            adapter.setCategory(it)
-        }
+        with(viewModel) {
+            val owner = this@SettingsFragment
 
-        viewModel.intentObservable.observe(this) {
-            startActivity(it)
-        }
-
-        viewModel.isShuffleObservable.observe(this) {
-            if (it) {
-                sequence.isChecked = true
-            } else {
-                shuffle.isChecked = true
+            categoryObservable.observe(owner) {
+                adapter.setCategory(it)
             }
-        }
 
-        viewModel.logoutObservable.observe(this) {
-            App.restart(requireActivity())
+            intentObservable.observe(owner) {
+                startActivity(it)
+            }
+
+            isShuffleObservable.observe(owner) {
+                if (it) {
+                    sequence.isChecked = true
+                } else {
+                    shuffle.isChecked = true
+                }
+            }
+
+            logoutObservable.observe(owner) {
+                App.restart(requireActivity())
+            }
+
+            enqueueImages.observe(owner) {
+                PhotosWorker.enqueueLoad(requireContext())
+            }
         }
     }
 

@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.Menu
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -37,24 +36,24 @@ class LoginActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         signIn.setOnClickListener { viewModel.onSignIn() }
 
-        viewModel.authorizeObservable.observe(this) { uri ->
-            Intent(Intent.ACTION_VIEW, uri).apply {
-                flags = Intent.FLAG_ACTIVITY_NO_HISTORY or Intent.FLAG_ACTIVITY_NEW_TASK
-            }.also {
+        with(viewModel) {
+            val owner = this@LoginActivity
+
+            authorizeObservable.observe(owner) {
                 startActivity(it)
             }
-        }
 
-        viewModel.loadingObservable.observe(this) {
-            progressBar.isVisible = it
-        }
+            loadingObservable.observe(owner) {
+                progressBar.isVisible = it
+            }
 
-        viewModel.errorObservable.observe(this) {
-            toast(it)
-        }
+            errorObservable.observe(owner) {
+                toast(it)
+            }
 
-        viewModel.resultObservable.observe(this) {
-            App.restart(this)
+            resultObservable.observe(owner) {
+                App.restart(this@LoginActivity)
+            }
         }
     }
 

@@ -1,6 +1,6 @@
 package com.alirezaafkar.phuzei.presentation.login
 
-import android.net.Uri
+import android.content.Intent
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -24,8 +24,8 @@ class LoginViewModel @Inject constructor(
     private val _loadingObservable = MutableLiveData<Boolean>()
     val loadingObservable: LiveData<Boolean> = _loadingObservable
 
-    private val _authorizeObservable = SingleLiveEvent<Uri>()
-    val authorizeObservable: LiveData<Uri> = _authorizeObservable
+    private val _authorizeObservable = SingleLiveEvent<Intent>()
+    val authorizeObservable: LiveData<Intent> = _authorizeObservable
 
     private val _resultObservable = SingleLiveEvent<Unit>()
     val resultObservable: LiveData<Unit> = _resultObservable
@@ -34,7 +34,12 @@ class LoginViewModel @Inject constructor(
     val errorObservable: LiveData<String> = _errorObservable
 
     fun onSignIn() {
-        _authorizeObservable.value = authorizeUrl.toString().toUri()
+        _authorizeObservable.value = Intent(
+            Intent.ACTION_VIEW,
+            authorizeUrl.toString().toUri()
+        ).apply {
+            flags = Intent.FLAG_ACTIVITY_NO_HISTORY or Intent.FLAG_ACTIVITY_NEW_TASK
+        }
     }
 
     fun onAuthorized(code: String) {

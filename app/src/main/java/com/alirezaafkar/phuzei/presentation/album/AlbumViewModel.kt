@@ -1,5 +1,6 @@
 package com.alirezaafkar.phuzei.presentation.album
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,7 +8,6 @@ import com.alirezaafkar.phuzei.data.model.Album
 import com.alirezaafkar.phuzei.data.model.BaseAlbumResponse
 import com.alirezaafkar.phuzei.data.pref.AppPreferences
 import com.alirezaafkar.phuzei.data.repository.AlbumsRepository
-import com.alirezaafkar.phuzei.presentation.muzei.PhotosWorker
 import com.alirezaafkar.phuzei.util.SingleLiveEvent
 import com.alirezaafkar.phuzei.util.addTo
 import io.reactivex.Single
@@ -35,13 +35,18 @@ class AlbumViewModel @Inject constructor(
     private val _errorObservable = SingleLiveEvent<String>()
     val errorObservable: LiveData<String> = _errorObservable
 
+    private val _enqueueImages = SingleLiveEvent<Unit>()
+    val enqueueImages: LiveData<Unit> = _enqueueImages
+
     private var pageToken: String? = null
     val currentAlbum: String? = prefs.album
     private var albumType = AlbumFragment.TYPE_ALBUMS
 
     fun subscribe(albumType: Int) {
-        this.albumType = albumType
-        onRefresh()
+        if (disposable.size() == 0) {
+            this.albumType = albumType
+            onRefresh()
+        }
     }
 
     fun onSelectAlbum(album: Album) {
@@ -79,10 +84,10 @@ class AlbumViewModel @Inject constructor(
     }
 
     private fun loadAlbumImages(title: String?) {
-        PhotosWorker.enqueueLoad()
         title?.let {
             _selectAlbumObservable.value = it
         }
+        _enqueueImages.value = null
     }
 
     private fun getAlbumsApi(): Single<out BaseAlbumResponse> {

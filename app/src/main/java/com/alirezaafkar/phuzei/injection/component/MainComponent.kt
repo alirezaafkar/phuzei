@@ -9,7 +9,6 @@ import com.alirezaafkar.phuzei.presentation.album.AlbumFragment
 import com.alirezaafkar.phuzei.presentation.login.LoginActivity
 import com.alirezaafkar.phuzei.presentation.main.MainActivity
 import com.alirezaafkar.phuzei.presentation.muzei.PhotosArtProvider
-import com.alirezaafkar.phuzei.presentation.muzei.PhotosArtSource
 import com.alirezaafkar.phuzei.presentation.muzei.PhotosWorker
 import com.alirezaafkar.phuzei.presentation.setting.SettingsFragment
 import com.alirezaafkar.phuzei.presentation.splash.SplashActivity
@@ -37,7 +36,6 @@ interface MainComponent {
     fun inject(loginActivity: LoginActivity)
     fun inject(albumFragment: AlbumFragment)
     fun inject(splashActivity: SplashActivity)
-    fun inject(photosArtSource: PhotosArtSource)
     fun inject(settingsFragment: SettingsFragment)
     fun inject(photosArtProvider: PhotosArtProvider)
     fun inject(tokenAuthenticator: TokenAuthenticator)
