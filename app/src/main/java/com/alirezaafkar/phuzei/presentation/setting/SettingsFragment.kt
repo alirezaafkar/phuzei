@@ -50,6 +50,8 @@ class SettingsFragment : Fragment() {
 
             isShuffleObservable.observe(owner) {
                 if (it) {
+                    shuffle.isChecked = true
+                } else {
                     sequence.isChecked = true
                 } else {
                     shuffle.isChecked = true
@@ -78,8 +80,8 @@ class SettingsFragment : Fragment() {
         logout.setOnClickListener { viewModel.onLogout() }
         logoutDescription.setOnClickListener { viewModel.onLogout() }
 
-        order.setOnCheckedChangeListener { _, index ->
-            viewModel.onShuffleOrder(index != 0)
+        order.setOnCheckedChangeListener { _, id ->
+            viewModel.onShuffleOrder(id == R.id.shuffle)
         }
 
         setupRecycler()

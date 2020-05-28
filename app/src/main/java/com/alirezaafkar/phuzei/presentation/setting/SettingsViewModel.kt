@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.alirezaafkar.phuzei.MUZEI_PACKAGE_NAME
 import com.alirezaafkar.phuzei.data.pref.AppPreferences
@@ -20,10 +21,10 @@ class SettingsViewModel @Inject constructor(
     private val _logoutObservable = SingleLiveEvent<Unit>()
     val logoutObservable: LiveData<Unit> = _logoutObservable
 
-    private val _isShuffleObservable = SingleLiveEvent<Boolean>()
+    private val _isShuffleObservable = MutableLiveData<Boolean>()
     val isShuffleObservable: LiveData<Boolean> = _isShuffleObservable
 
-    private val _categoryObservable = SingleLiveEvent<String>()
+    private val _categoryObservable = MutableLiveData<String>()
     val categoryObservable: LiveData<String> = _categoryObservable
 
     private val _intentObservable = SingleLiveEvent<Intent>()
