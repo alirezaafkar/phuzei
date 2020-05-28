@@ -21,6 +21,9 @@
     <string name="logout_description">Clear stored data</string>
     <string name="category_description">Select category from settings</string>
     <string name="images_per_request">Images per request</string>
+    <string name="purchase_ok">Thanks for supporting me :)</string>
+    <string name="donate">Donate</string>
+    <string name="donate_description">Support me :)</string>
 
     <string-array name="images_count">
         <item>1</item>

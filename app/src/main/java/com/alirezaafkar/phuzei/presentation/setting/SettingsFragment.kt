@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import com.alirezaafkar.phuzei.App
 import com.alirezaafkar.phuzei.R
+import com.alirezaafkar.phuzei.presentation.donate.DonateDialog
 import com.alirezaafkar.phuzei.presentation.muzei.PhotosWorker
 import kotlinx.android.synthetic.main.fragment_settings.*
 import javax.inject.Inject
@@ -83,6 +84,11 @@ class SettingsFragment : Fragment() {
         logout.setOnClickListener { viewModel.onLogout() }
         logoutDescription.setOnClickListener { viewModel.onLogout() }
 
+        donateDescription.setOnClickListener { donate.performClick() }
+        donate.setOnClickListener {
+            DonateDialog.newInstance().show(parentFragmentManager, "")
+        }
+
         order.setOnCheckedChangeListener { _, id ->
             viewModel.onShuffleOrder(id == R.id.shuffle)
         }
@@ -117,4 +123,5 @@ class SettingsFragment : Fragment() {
             return SettingsFragment()
         }
     }
+
 }
