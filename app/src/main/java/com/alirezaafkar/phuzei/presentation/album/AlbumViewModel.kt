@@ -1,6 +1,5 @@
 package com.alirezaafkar.phuzei.presentation.album
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -87,7 +86,7 @@ class AlbumViewModel @Inject constructor(
         title?.let {
             _selectAlbumObservable.value = it
         }
-        _enqueueImages.value = null
+        _enqueueImages.call()
     }
 
     private fun getAlbumsApi(): Single<out BaseAlbumResponse> {

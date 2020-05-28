@@ -25,7 +25,8 @@
             android:id="@+id/contactDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="@dimen/menu_item_padding"
+            android:layout_marginRight="@dimen/menu_item_padding"
             android:text="pesiran@gmail.com"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
             tools:ignore="HardcodedText" />
@@ -42,7 +43,8 @@
             android:id="@+id/muzeiDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="@dimen/menu_item_padding"
+            android:layout_marginRight="@dimen/menu_item_padding"
             android:text="@string/muzei_description"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
             tools:ignore="HardcodedText" />
@@ -59,10 +61,29 @@
             android:id="@+id/logoutDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="@dimen/menu_item_padding"
+            android:layout_marginRight="@dimen/menu_item_padding"
             android:text="@string/logout_description"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
             tools:ignore="HardcodedText" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/imagesCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/images_per_request"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/imagesCountDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/menu_item_padding"
+            android:layout_marginRight="@dimen/menu_item_padding"
+            android:entries="@array/images_count"
+            android:spinnerMode="dialog"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Overline" />
 
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"

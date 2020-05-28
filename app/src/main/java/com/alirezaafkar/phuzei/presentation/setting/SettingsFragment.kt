@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
@@ -53,8 +54,6 @@ class SettingsFragment : Fragment() {
                     shuffle.isChecked = true
                 } else {
                     sequence.isChecked = true
-                } else {
-                    shuffle.isChecked = true
                 }
             }
 
@@ -62,8 +61,12 @@ class SettingsFragment : Fragment() {
                 App.restart(requireActivity())
             }
 
+            imagesCountObservable.observe(owner) {
+                imagesCountDescription.setSelection(it)
+            }
+
             enqueueImages.observe(owner) {
-                PhotosWorker.enqueueLoad(requireContext())
+                PhotosWorker.enqueueLoad(requireContext(), true)
             }
         }
     }
@@ -82,6 +85,19 @@ class SettingsFragment : Fragment() {
 
         order.setOnCheckedChangeListener { _, id ->
             viewModel.onShuffleOrder(id == R.id.shuffle)
+        }
+
+        imagesCount.setOnClickListener { imagesCountDescription.performClick() }
+        imagesCountDescription.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
+                viewModel.onImagesCount(position)
+            }
+
         }
 
         setupRecycler()

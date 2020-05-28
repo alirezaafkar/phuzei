@@ -40,7 +40,12 @@ class PhotosWorker(
 
     override fun doWork(): Result {
         val response = try {
-            repository.getAlbumPhotosSync(prefs.album, prefs.category, prefs.pageToken)
+            repository.getAlbumPhotosSync(
+                albumId = prefs.album,
+                category = prefs.category,
+                pageToken = prefs.pageToken,
+                pageSize = prefs.imagesCount
+            )
         } catch (e: IOException) {
             null
         }
@@ -84,17 +89,24 @@ class PhotosWorker(
     }
 
     companion object {
-        internal fun enqueueLoad(context: Context) {
-            val workManager = WorkManager.getInstance(context)
-            workManager.enqueue(
-                OneTimeWorkRequestBuilder<PhotosWorker>()
-                    .setConstraints(
-                        Constraints.Builder()
-                            .setRequiredNetworkType(NetworkType.CONNECTED)
-                            .build()
-                    )
-                    .build()
-            )
+        internal fun enqueueLoad(context: Context, clearCurrentImages: Boolean) {
+            if (clearCurrentImages) {
+                ProviderContract.getProviderClient(context, BuildConfig.PHUZEI_AUTHORITY).run {
+                    context.contentResolver.delete(contentUri, null, null)
+                }
+            }
+
+            WorkManager.getInstance(context).run {
+                enqueue(
+                    OneTimeWorkRequestBuilder<PhotosWorker>()
+                        .setConstraints(
+                            Constraints.Builder()
+                                .setRequiredNetworkType(NetworkType.CONNECTED)
+                                .build()
+                        )
+                        .build()
+                )
+            }
         }
     }
 }

@@ -3,11 +3,12 @@ package com.alirezaafkar.phuzei.data.pref
 import android.content.Context
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
+import com.alirezaafkar.phuzei.R
 
 /**
  * Created by Alireza Afkar on 16/9/2018AD.
  */
-class AppPreferences(context: Context) {
+class AppPreferences(private val context: Context) {
 
     private val preferences = PreferenceManager.getDefaultSharedPreferences(context)
 
@@ -39,6 +40,14 @@ class AppPreferences(context: Context) {
         get() = preferences.getString(CATEGORY, "") ?: ""
         set(value) = preferences.edit { putString(CATEGORY, value) }
 
+    var imagesCountIndex: Int
+        get() = preferences.getInt(IMAGES_COUNT, 1)
+        set(value) = preferences.edit { putInt(IMAGES_COUNT, value) }
+
+    var imagesCount: Int = 1
+        get() = context.resources.getStringArray(R.array.images_count)[imagesCountIndex].toInt()
+        private set
+
     fun logout() {
         preferences.edit {
             putString(ALBUM, null)
@@ -56,6 +65,7 @@ class AppPreferences(context: Context) {
         private const val CATEGORY = "category"
         private const val PAGE_TOKEN = "page_token"
         private const val TOKEN_TYPE = "token_type"
+        private const val IMAGES_COUNT = "images_count"
         private const val ACCESS_TOKEN = "access_token"
         private const val REFRESH_TOKEN = "refresh_token"
     }

@@ -21,9 +21,9 @@ class SplashViewModel @Inject constructor(
 
     fun subscribe() {
         if (prefs.accessToken.isNullOrEmpty()) {
-            _loginActivityObservable.value = null
+            _loginActivityObservable.call()
         } else {
-            _mainActivityObservable.value = null
+            _mainActivityObservable.call()
         }
     }
 }

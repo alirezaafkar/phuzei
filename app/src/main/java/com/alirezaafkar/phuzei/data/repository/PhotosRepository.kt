@@ -18,47 +18,50 @@ import javax.inject.Inject
 class PhotosRepository @Inject constructor(private var api: PhotosApi) {
 
     fun getAlbumPhotos(
+        pageSize: Int,
         albumId: String?,
         category: String,
         pageToken: String? = null
     ): Single<SearchResponse> {
-        val search = createSearchBody(albumId, category, pageToken)
+        val search = createSearchBody(pageSize, albumId, category, pageToken)
 
         return if (search == null) {
-            getPhotos()
+            getPhotos(pageSize, pageToken)
         } else {
             api.getAlbumPhotos(search).compose(applyNetworkSchedulers())
         }
     }
 
     fun getAlbumPhotosSync(
+        pageSize: Int,
         albumId: String?,
         category: String,
         pageToken: String? = null
     ): SearchResponse? {
-        val search = createSearchBody(albumId, category, pageToken)
+        val search = createSearchBody(pageSize, albumId, category, pageToken)
 
         return if (search == null) {
-            getPhotosAsync()
+            getPhotosAsync(pageSize, pageToken)
         } else {
             return api.getAlbumPhotosCall(search).execute().body()
         }
     }
 
-    fun getPhotos(): Single<SearchResponse> {
-        return api.getPhotos().compose(applyNetworkSchedulers())
+    private fun getPhotos(pageSize: Int, pageToken: String?): Single<SearchResponse> {
+        return api.getPhotos(pageSize, pageToken).compose(applyNetworkSchedulers())
     }
 
-    fun getPhotosAsync(): SearchResponse? {
-        return api.getPhotosCall().execute().body()
+    private fun getPhotosAsync(pageSize: Int, pageToken: String?): SearchResponse? {
+        return api.getPhotosCall(pageSize, pageToken).execute().body()
     }
 
     private fun createSearchBody(
+        pageSize: Int,
         albumId: String?,
         category: String,
         pageToken: String? = null
     ): Search? {
-        var search = Search(pageToken = pageToken)
+        var search = Search(pageToken = pageToken, pageSize = pageSize)
 
         search = if (albumId.isNullOrEmpty() && category.isEmpty()) {
             return null

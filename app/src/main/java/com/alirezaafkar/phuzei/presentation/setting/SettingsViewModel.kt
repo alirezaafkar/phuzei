@@ -30,23 +30,35 @@ class SettingsViewModel @Inject constructor(
     private val _intentObservable = SingleLiveEvent<Intent>()
     val intentObservable: LiveData<Intent> = _intentObservable
 
+    private val _imagesCountObservable = MutableLiveData<Int>()
+    val imagesCountObservable: LiveData<Int> = _imagesCountObservable
+
     private val _enqueueImages = SingleLiveEvent<Unit>()
     val enqueueImages: LiveData<Unit> = _enqueueImages
 
     fun subscribe() {
         _isShuffleObservable.value = prefs.shuffle
         _categoryObservable.value = prefs.category
+        _imagesCountObservable.value = prefs.imagesCountIndex
     }
 
     fun onShuffleOrder(shuffle: Boolean) {
-        prefs.shuffle = shuffle
-        _enqueueImages.value = null
+        if (shuffle != prefs.shuffle) {
+            prefs.shuffle = shuffle
+            _enqueueImages.call()
+        }
     }
 
     fun onSelectCategory(category: String) {
-        prefs.category = category
-        _categoryObservable.value = category
-        _enqueueImages.value = null
+        if (category != prefs.category) {
+            prefs.category = category
+            _categoryObservable.value = category
+            _enqueueImages.call()
+        }
+    }
+
+    fun onImagesCount(position: Int) {
+        prefs.imagesCountIndex = position
     }
 
     fun onContact() {
@@ -72,6 +84,6 @@ class SettingsViewModel @Inject constructor(
 
     fun onLogout() {
         prefs.logout()
-        _logoutObservable.value = null
+        _logoutObservable.call()
     }
 }

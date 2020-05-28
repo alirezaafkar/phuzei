@@ -20,4 +20,19 @@
     <string name="muzei_description">Open Muzei</string>
     <string name="logout_description">Clear stored data</string>
     <string name="category_description">Select category from settings</string>
+    <string name="images_per_request">Images per request</string>
+
+    <string-array name="images_count">
+        <item>1</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>25</item>
+        <item>30</item>
+        <item>35</item>
+        <item>40</item>
+        <item>45</item>
+        <item>50</item>
+    </string-array>
 </resources>

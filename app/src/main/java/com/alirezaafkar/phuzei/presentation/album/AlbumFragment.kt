@@ -62,7 +62,7 @@ class AlbumFragment : Fragment() {
             }
 
             enqueueImages.observe(owner) {
-                PhotosWorker.enqueueLoad(requireContext())
+                PhotosWorker.enqueueLoad(requireContext(), true)
             }
         }
     }
