@@ -5,14 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import com.alirezaafkar.phuzei.App
+import com.alirezaafkar.phuzei.BuildConfig
+import com.alirezaafkar.phuzei.MUZEI_PACKAGE_NAME
 import com.alirezaafkar.phuzei.R
-import com.alirezaafkar.phuzei.presentation.donate.DonateDialog
 import com.alirezaafkar.phuzei.presentation.muzei.PhotosWorker
+import com.alirezaafkar.phuzei.presentation.pro.ProDialog
+import com.alirezaafkar.phuzei.util.openInPlayStore
 import kotlinx.android.synthetic.main.fragment_settings.*
 import javax.inject.Inject
 
@@ -78,15 +82,18 @@ class SettingsFragment : Fragment() {
         contact.setOnClickListener { viewModel.onContact() }
         contactDescription.setOnClickListener { viewModel.onContact() }
 
-        muzei.setOnClickListener { viewModel.onMuzeiClick(requireContext().packageManager) }
-        muzeiDescription.setOnClickListener { viewModel.onMuzeiClick(requireContext().packageManager) }
+        muzei.setOnClickListener { openInPlayStore(MUZEI_PACKAGE_NAME) }
+        muzeiDescription.setOnClickListener { muzei.performClick() }
 
         logout.setOnClickListener { viewModel.onLogout() }
         logoutDescription.setOnClickListener { viewModel.onLogout() }
 
-        donateDescription.setOnClickListener { donate.performClick() }
-        donate.setOnClickListener {
-            DonateDialog.newInstance().show(parentFragmentManager, "")
+        pro.isVisible = !BuildConfig.IS_PRO
+        proDescription.isVisible = pro.isVisible
+
+        proDescription.setOnClickListener { pro.performClick() }
+        pro.setOnClickListener {
+            ProDialog.show(parentFragmentManager)
         }
 
         order.setOnCheckedChangeListener { _, id ->

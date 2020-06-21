@@ -6,3 +6,6 @@
 /build
 /captures
 .externalNativeBuild
+/app/free/*
+/app/pro/*
+/app/release/*

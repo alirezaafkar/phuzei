@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">Phuzei</string>
     <string name="sign_in">Sign in</string>
     <string name="contact">Contact</string>
     <string name="error_code">Error!</string>
@@ -22,8 +21,14 @@
     <string name="category_description">Select category from settings</string>
     <string name="images_per_request">Images per request</string>
     <string name="purchase_ok">Thanks for supporting me :)</string>
-    <string name="donate">Donate</string>
-    <string name="donate_description">Support me :)</string>
+    <string name="pro_version">Pro version</string>
+    <string name="pro_version_description">If you get 409 error click here</string>
+
+    <string name="pro_dialog_description">
+        The Google Photos API has a limitation of 10.000 calls per day.\n\n
+        Due to the high demand of Phuzei, you may get the 429 error while using this free version.\n\n
+        For full support and better experience, please install the pro version.
+    </string>
 
     <string-array name="images_count">
         <item>1</item>

@@ -10,7 +10,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import com.alirezaafkar.phuzei.App
-import com.alirezaafkar.phuzei.BASE_REDIRECT_URI
+import com.alirezaafkar.phuzei.BuildConfig
 import com.alirezaafkar.phuzei.CODE
 import com.alirezaafkar.phuzei.ERROR_CODE
 import com.alirezaafkar.phuzei.R
@@ -64,7 +64,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun checkResponse(data: Uri) {
-        if (data.scheme?.equals(BASE_REDIRECT_URI) == false) return
+        if (data.scheme?.equals(BuildConfig.APPLICATION_ID) == false) return
 
         val code = data.getQueryParameter(CODE)
         val error = data.getQueryParameter(ERROR_CODE)

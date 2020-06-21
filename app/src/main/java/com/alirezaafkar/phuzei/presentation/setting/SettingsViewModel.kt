@@ -1,16 +1,12 @@
 package com.alirezaafkar.phuzei.presentation.setting
 
 import android.content.Intent
-import android.content.pm.PackageManager
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.alirezaafkar.phuzei.MUZEI_PACKAGE_NAME
 import com.alirezaafkar.phuzei.data.pref.AppPreferences
 import com.alirezaafkar.phuzei.util.SingleLiveEvent
-import com.android.billingclient.api.BillingClient
-import com.android.billingclient.api.SkuDetailsParams
 import javax.inject.Inject
 
 /**
@@ -71,17 +67,6 @@ class SettingsViewModel @Inject constructor(
             _intentObservable.value = it
         }
 
-    }
-
-    fun onMuzeiClick(packageManager: PackageManager) {
-        var intent = packageManager.getLaunchIntentForPackage(MUZEI_PACKAGE_NAME)
-        if (intent == null) {
-            intent = Intent(Intent.ACTION_VIEW).apply {
-                data = "market://details?id=$MUZEI_PACKAGE_NAME".toUri()
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
-        }
-        _intentObservable.value = intent
     }
 
     fun onLogout() {

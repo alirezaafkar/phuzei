@@ -15,28 +15,27 @@
         android:orientation="vertical">
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/donate"
+            android:id="@+id/pro"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorAccent"
-            android:text="@string/donate"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+            android:text="@string/pro_version"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textColor="@color/colorAccent" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/donateDescription"
+            android:id="@+id/proDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/menu_item_padding"
             android:layout_marginRight="@dimen/menu_item_padding"
-            android:text="@string/donate_description"
+            android:text="@string/pro_version_description"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Overline" />
-
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/contact"
             android:layout_width="wrap_content"
-            android:layout_marginTop="12dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
             android:text="@string/contact"
             android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
@@ -92,7 +91,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:text="@string/images_per_request"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:visibility="gone" />
 
         <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/imagesCountDescription"
@@ -102,7 +102,8 @@
             android:layout_marginRight="@dimen/menu_item_padding"
             android:entries="@array/images_count"
             android:spinnerMode="dialog"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Overline" />
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
+            android:visibility="gone" />
 
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"
