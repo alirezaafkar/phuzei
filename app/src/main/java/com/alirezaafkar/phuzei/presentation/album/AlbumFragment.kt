@@ -10,11 +10,16 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import com.alirezaafkar.phuzei.App
+import com.alirezaafkar.phuzei.BuildConfig
+import com.alirezaafkar.phuzei.MUZEI_PACKAGE_NAME
 import com.alirezaafkar.phuzei.R
 import com.alirezaafkar.phuzei.presentation.main.AlbumAdapter
 import com.alirezaafkar.phuzei.presentation.muzei.PhotosWorker
 import com.alirezaafkar.phuzei.util.InfiniteScrollListener
+import com.alirezaafkar.phuzei.util.isMuzeiInstalled
+import com.alirezaafkar.phuzei.util.openInPlayStore
 import com.alirezaafkar.phuzei.util.toast
+import com.google.android.apps.muzei.api.MuzeiContract
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_albums.*
 import javax.inject.Inject
@@ -38,13 +43,11 @@ class AlbumFragment : Fragment() {
         with(viewModel) {
             val owner = this@AlbumFragment
             selectAlbumObservable.observe(owner) {
-                Snackbar.make(
-                    swipe,
-                    getString(R.string.selected_album_, it),
-                    Snackbar.LENGTH_LONG
-                ).setAction(R.string.exit) {
-                    requireActivity().finish()
-                }.show()
+                if (isPhuzeiSelected()) {
+                    showExitSnackBar(it)
+                } else {
+                    showActivateSnackBar()
+                }
             }
 
             albumsObservable.observe(owner) {
@@ -97,6 +100,38 @@ class AlbumFragment : Fragment() {
     private fun refresh() {
         adapter.clearItems()
         viewModel.onRefresh()
+    }
+
+    private fun isPhuzeiSelected(): Boolean {
+        return MuzeiContract.Sources.isProviderSelected(
+            requireContext(),
+            BuildConfig.PHUZEI_AUTHORITY
+        )
+    }
+
+    private fun showActivateSnackBar() {
+        Snackbar.make(
+            swipe,
+            R.string.source_not_activated,
+            Snackbar.LENGTH_LONG
+        ).setAction(R.string.activate) {
+            val intent = MuzeiContract.Sources.createChooseProviderIntent(BuildConfig.PHUZEI_AUTHORITY)
+            if (isMuzeiInstalled()) {
+                startActivity(intent)
+            } else {
+                openInPlayStore(MUZEI_PACKAGE_NAME)
+            }
+        }.show()
+    }
+
+    private fun showExitSnackBar(title: String) {
+        Snackbar.make(
+            swipe,
+            getString(R.string.selected_album_, title),
+            Snackbar.LENGTH_LONG
+        ).setAction(R.string.exit) {
+            requireActivity().finish()
+        }.show()
     }
 
     companion object {

@@ -27,9 +27,14 @@ fun Fragment.openInPlayStore(packageName: String) {
     var intent = requireContext().packageManager.getLaunchIntentForPackage(packageName)
     if (intent == null) {
         intent = Intent(Intent.ACTION_VIEW).apply {
-            data = "market://details?id=$MUZEI_PACKAGE_NAME".toUri()
+            data = "market://details?id=$packageName".toUri()
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
     }
     startActivity(intent)
+}
+
+fun Fragment.isMuzeiInstalled(): Boolean {
+    val intent = requireContext().packageManager.getLaunchIntentForPackage(MUZEI_PACKAGE_NAME)
+    return intent != null
 }

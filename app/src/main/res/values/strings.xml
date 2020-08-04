@@ -29,6 +29,8 @@
         Due to the high demand of Phuzei, you may get the 429 error while using this free version.\n\n
         For full support and better experience, please install the pro version.
     </string>
+    <string name="source_not_activated">Phuzei is not activated</string>
+    <string name="activate">Activate</string>
 
     <string-array name="images_count">
         <item>1</item>

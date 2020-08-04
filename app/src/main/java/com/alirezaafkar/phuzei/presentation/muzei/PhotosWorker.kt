@@ -74,14 +74,13 @@ class PhotosWorker(
         medias.asSequence()
             .filter(Media::isImage)
             .map { photo ->
-                Artwork().apply {
-                    token = photo.id
-                    title = photo.filename
-                    byline = photo.description
-                    webUri = photo.productUrl.toUri()
+                Artwork(
+                    token = photo.id,
+                    title = photo.filename,
+                    byline = photo.description,
+                    webUri = photo.productUrl.toUri(),
                     persistentUri = photo.largeUrl().toUri()
-
-                }
+                )
             }
             .toList().forEach {
                 provider.addArtwork(it)
